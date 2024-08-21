@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.dataLoader = new System.ComponentModel.BackgroundWorker();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.oid_l = new System.Windows.Forms.Label();
@@ -42,6 +40,11 @@
             this.buttonPauseResume = new System.Windows.Forms.Button();
             this.recov = new System.Windows.Forms.Label();
             this.convertToCSV = new System.ComponentModel.BackgroundWorker();
+            this.convertToSQL = new System.ComponentModel.BackgroundWorker();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.uploadLoader = new System.ComponentModel.BackgroundWorker();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,29 +54,9 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Download JSON";
+            this.button1.Text = "START";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(15, 122);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "JSON -> CSV";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(15, 152);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "CSV -> SQL";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // dataLoader
             // 
@@ -156,7 +139,7 @@
             // buttonPauseResume
             // 
             this.buttonPauseResume.Enabled = false;
-            this.buttonPauseResume.Location = new System.Drawing.Point(15, 181);
+            this.buttonPauseResume.Location = new System.Drawing.Point(15, 122);
             this.buttonPauseResume.Name = "buttonPauseResume";
             this.buttonPauseResume.Size = new System.Drawing.Size(100, 23);
             this.buttonPauseResume.TabIndex = 12;
@@ -179,11 +162,49 @@
             this.convertToCSV.DoWork += new System.ComponentModel.DoWorkEventHandler(this.convertToCSV_DoWork);
             this.convertToCSV.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.convertToCSV_RunWorkerCompleted);
             // 
+            // convertToSQL
+            // 
+            this.convertToSQL.WorkerSupportsCancellation = true;
+            this.convertToSQL.DoWork += new System.ComponentModel.DoWorkEventHandler(this.convertToSQL_DoWork);
+            this.convertToSQL.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.convertToSQL_RunWorkerCompleted);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(257, 42);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(120, 20);
+            this.textBox1.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 249);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "label1";
+            // 
+            // uploadLoader
+            // 
+            this.uploadLoader.WorkerSupportsCancellation = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(15, 151);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(100, 23);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "UPLOAD DB";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // ExportView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.recov);
             this.Controls.Add(this.buttonPauseResume);
             this.Controls.Add(this.progressBar2);
@@ -193,8 +214,6 @@
             this.Controls.Add(this.version_l);
             this.Controls.Add(this.oid_l);
             this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "ExportView";
             this.Text = "Form1";
@@ -207,8 +226,6 @@
 
         #endregion
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
         private System.ComponentModel.BackgroundWorker dataLoader;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label oid_l;
@@ -220,6 +237,11 @@
         private System.Windows.Forms.Button buttonPauseResume;
         private System.Windows.Forms.Label recov;
         private System.ComponentModel.BackgroundWorker convertToCSV;
+        private System.ComponentModel.BackgroundWorker convertToSQL;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
+        private System.ComponentModel.BackgroundWorker uploadLoader;
+        private System.Windows.Forms.Button button2;
     }
 }
 

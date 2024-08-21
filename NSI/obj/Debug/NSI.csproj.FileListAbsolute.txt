@@ -10,3 +10,15 @@ C:\Users\ekaurtsev\source\repos\NSI\NSI\obj\Debug\NSI.pdb
 C:\Users\ekaurtsev\source\repos\NSI\NSI\bin\Debug\Newtonsoft.Json.dll
 C:\Users\ekaurtsev\source\repos\NSI\NSI\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ekaurtsev\source\repos\NSI\NSI\obj\Debug\NSI.csproj.Up2Date
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\bin\Debug\NSI.exe
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\bin\Debug\NSI.pdb
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.ExportView.resources
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.Properties.Resources.resources
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.csproj.GenerateResource.cache
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.csproj.Up2Date
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.exe
+C:\Users\Admin\Desktop\NSI-Book-main\NSI\obj\Debug\NSI.pdb

@@ -9,7 +9,8 @@ namespace NSI.Classes
 {
     internal class Sv
     {
-        private static readonly string BaseDirectory = @"S:\\Отдел разработки и внедрения ПО\\Каурцев А. Е\\serv\\www\\NSI\\logs";
+        //   private static readonly string BaseDirectory = @"S:\\Отдел разработки и внедрения ПО\\Каурцев А. Е\\serv\\www\\NSI\\logs";
+        private static readonly string BaseDirectory = @".//";
         public static readonly string LogDirectory = BaseDirectory;
         public static readonly string ErrorLogFile = BaseDirectory + @"\\errors.log";
         public static void Log(string message, string stackTrace)

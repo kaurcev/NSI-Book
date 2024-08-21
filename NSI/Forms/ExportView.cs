@@ -7,9 +7,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace NSI
 {
@@ -18,6 +21,9 @@ namespace NSI
         public static string oid = "1.2.643.5.1.13.13.99.2.228";
         public static string version = "3.5";
         public static string total = "1317";
+        public static string key = "id";
+
+        public static string destinationBasePath = @".\dump_sql\";
 
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
         private bool isPaused = false;
@@ -48,6 +54,7 @@ namespace NSI
 
         private void dataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
+            label1.Text = "Загрузка данных";
             string baseFolderPath = $@".//temp//{oid_l.Text}//";
             if (Directory.Exists(baseFolderPath))
             {
@@ -171,6 +178,7 @@ namespace NSI
 
         private void dataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            label1.Text = "Загрузка данных завершена";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
             numericUpDown1.Enabled = true;
@@ -185,11 +193,18 @@ namespace NSI
         public string exporturl = "";
         private void convertToCSV_DoWork(object sender, DoWorkEventArgs e)
         {
+            dataLoader.CancelAsync();
+            label1.Text = "Конвертация данных в CSV";
+            progressBar1.Value = 0;
+            progressBar2.Value = 0;
             recov.Visible = false;
             try
             {
-                dataLoader.CancelAsync();
                 string exportPath = Path.Combine(".//data", oid_l.Text);
+                if (Directory.Exists(exportPath))
+                {
+                    Directory.Delete(exportPath, true);
+                }
                 CreateDirectoryIfNotExists(exportPath);
                 string versionFolderPath = Path.Combine(exportPath, version_l.Text);
                 exporturl = versionFolderPath;
@@ -210,7 +225,6 @@ namespace NSI
 
                 // Tools.NotivState(notify, "Экспорт завершён");
                 // Tools.MessageShow(notify, "Успешно", "Экспорт завершён", 5);
-                ToggleExportButtons(true);
             }
             catch (Exception ex)
             {
@@ -304,15 +318,6 @@ namespace NSI
             Sv.Log(ex.Message, ex.StackTrace);
             // Tools.MessageShow(notify, "Ошибка", "Произошла ошибка: " + ex.Message, 5);
         }
-
-        private void ToggleExportButtons(bool isEnabled)
-        {
-            button2.Enabled = isEnabled;
-            button1.Enabled = true;
-            numericUpDown1.Enabled = true;
-            buttonPauseResume.Enabled = !isEnabled;
-        }
-
         private void CreateDirectoryIfNotExists(string path)
         {
             if (!Directory.Exists(path))
@@ -329,8 +334,147 @@ namespace NSI
 
         private void convertToCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            label1.Text = "Конвертация данных в CSV завершена";
+            progressBar1.Value = 0;
+            progressBar2.Value = 0;
             dataLoader.CancelAsync();
+            convertToSQL.RunWorkerAsync();
+        }
+
+        private void convertToSQL_DoWork(object sender, DoWorkEventArgs e)
+        {
             convertToCSV.CancelAsync();
+            label1.Text = "Конвертация данных в SQL";
+            try
+            {
+                // Tools.MessageShow(notify, "Загрузка", "Запущен экспорт в SQL", 5);
+                string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
+                string destinationPath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}\";
+                string fixedText2 = textBox1.Text;
+                if (Directory.Exists(destinationPath))
+                {
+                    Directory.Delete(destinationPath, true);
+                }
+
+                ExportSql(sourcePath, destinationPath, oid_l.Text, fixedText2);
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+            }
+        }
+        public void ExportSql(string folderPath, string outputFolderPath, string tableName, string schemaName)
+        {
+            CreateDirectoryIfNotExists(folderPath);
+            CreateDirectoryIfNotExists(outputFolderPath);
+
+            string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
+            List<string> failedFiles = new List<string>();
+
+            try
+            {
+                int io = 1;
+                foreach (string csvFilePath in csvFiles)
+                {
+                    pauseEvent.WaitOne();
+
+                    try
+                    {
+                        ProcessCsvFile(csvFilePath, outputFolderPath, tableName, schemaName);
+                        UpdateProgress(io++, csvFiles.Length);
+                    }
+                    catch (Exception  ex)
+                    {
+                        failedFiles.Add(csvFilePath);
+                       // Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {csvFilePath} - {ex.Message}", 5);
+                    }
+                }
+
+                RetryFailedFiles(failedFiles, outputFolderPath, tableName, schemaName);
+            }
+            catch (Exception ex)
+            {
+              //  Tools.MessageShow(notify, "Ошибка!", "Ошибка при загрузке папок: " + ex.Message, 5);
+                MessageBox.Show("Произошла ошибка: " + ex.Message);
+                Sv.Log(ex.Message, ex.StackTrace);
+            }
+        }
+        private void RetryFailedFiles(List<string> failedFiles, string outputFolderPath, string tableName, string schemaName)
+        {
+            foreach (string failedFile in failedFiles)
+            {
+                pauseEvent.WaitOne();
+                try
+                {
+                    ProcessCsvFile(failedFile, outputFolderPath, tableName, schemaName);
+                  //  Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
+                }
+                catch (Exception ex)
+                {
+                  //  Tools.MessageShow(notify, "Ошибка", $"Ошибка при повторной обработке файла: {failedFile} - {ex.Message}", 5);
+                }
+            }
+        }
+        private void ProcessCsvFile(string csvFilePath, string outputFolderPath, string tableName, string schemaName)
+        {
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(csvFilePath);
+            string sqlFilePath = Path.Combine(outputFolderPath, fileNameWithoutExtension + ".sql");
+
+            using (StreamWriter sw = new StreamWriter(sqlFilePath, false, Encoding.Default))
+            using (StreamReader sr = new StreamReader(csvFilePath, Encoding.Default))
+            {
+                string headerLine = sr.ReadLine();
+                if (headerLine == null)
+                {
+                    MessageBox.Show("CSV файл " + csvFilePath + " пуст.");
+                    return;
+                }
+
+                string[] columns = ProcessHeaderLine(headerLine);
+
+                while (!sr.EndOfStream)
+                {
+                    pauseEvent.WaitOne();
+
+                    string line = sr.ReadLine();
+                    string[] values = ProcessDataLine(line);
+                    string insertStatement = GenerateInsertStatement(tableName, columns, values, schemaName);
+                    sw.WriteLine(insertStatement);
+                }
+            }
+        }
+        private string[] ProcessHeaderLine(string headerLine)
+        {
+            return headerLine.Split('|').Select(column => string.IsNullOrEmpty(column) ? "NULL" : "\"" + column.Replace("\"", "") + "\"").ToArray();
+        }
+        public string GenerateInsertStatement(string tableName, string[] columns, string[] values, string schemaName)
+        {
+            string columnsPart = string.Join(", ", columns);
+            string valuesPart = string.Join(", ", values);
+            return $"INSERT INTO \"{schemaName}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
+        }
+
+        private string[] ProcessDataLine(string line)
+        {
+            return line.Split('|').Select(value => string.IsNullOrEmpty(value) ? "NULL" : "'" + value.Replace("\"", "") + "'").ToArray();
+        }
+        private void UpdateProgress(int current, int total)
+        {
+          //  Tools.NotivState(notify, $"Подготовка скриптов: {current} из {total}");
+            int percentComplete = (int)((current * 100) / total);
+         //    label22.Text = $"Подготовка скриптов: {current} из {total}";
+            progressBar1.Value = percentComplete;
+        }
+
+        private void convertToSQL_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            convertToSQL.CancelAsync();
+            progressBar1.Value = 0;
+            progressBar2.Value = 0;
+            label1.Text = "Конвертация данных в SQL завершена. Можете загрузить данные";
+            button1.Enabled = true;
+            numericUpDown1.Enabled = true;
+            buttonPauseResume.Enabled = false;
         }
     }
 }
