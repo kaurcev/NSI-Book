@@ -50,6 +50,9 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.shema_l = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
@@ -58,6 +61,7 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -90,7 +94,7 @@
             this.flowLayoutPanel7.AutoSize = true;
             this.flowLayoutPanel7.Controls.Add(this.button1);
             this.flowLayoutPanel7.Controls.Add(this.button2);
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(3, 137);
+            this.flowLayoutPanel7.Location = new System.Drawing.Point(3, 143);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
             this.flowLayoutPanel7.Size = new System.Drawing.Size(289, 29);
             this.flowLayoutPanel7.TabIndex = 31;
@@ -120,7 +124,7 @@
             this.flowLayoutPanel6.AutoSize = true;
             this.flowLayoutPanel6.Controls.Add(this.label5);
             this.flowLayoutPanel6.Controls.Add(this.textBoxPassword);
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 105);
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 111);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Size = new System.Drawing.Size(290, 26);
             this.flowLayoutPanel6.TabIndex = 28;
@@ -148,7 +152,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 6);
+            this.label3.Location = new System.Drawing.Point(3, 9);
             this.label3.MinimumSize = new System.Drawing.Size(48, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
@@ -160,7 +164,7 @@
             this.flowLayoutPanel5.AutoSize = true;
             this.flowLayoutPanel5.Controls.Add(this.label4);
             this.flowLayoutPanel5.Controls.Add(this.textBoxUsername);
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 73);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 79);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Size = new System.Drawing.Size(290, 26);
             this.flowLayoutPanel5.TabIndex = 27;
@@ -168,9 +172,9 @@
             // textBoxDatabase
             // 
             this.textBoxDatabase.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBoxDatabase.Location = new System.Drawing.Point(57, 3);
+            this.textBoxDatabase.Location = new System.Drawing.Point(57, 6);
             this.textBoxDatabase.Name = "textBoxDatabase";
-            this.textBoxDatabase.Size = new System.Drawing.Size(230, 20);
+            this.textBoxDatabase.Size = new System.Drawing.Size(76, 20);
             this.textBoxDatabase.TabIndex = 13;
             // 
             // flowLayoutPanel4
@@ -178,9 +182,10 @@
             this.flowLayoutPanel4.AutoSize = true;
             this.flowLayoutPanel4.Controls.Add(this.label3);
             this.flowLayoutPanel4.Controls.Add(this.textBoxDatabase);
+            this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel8);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 41);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(290, 26);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(292, 32);
             this.flowLayoutPanel4.TabIndex = 26;
             // 
             // label2
@@ -252,16 +257,16 @@
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel7);
             this.flowLayoutPanel1.Controls.Add(this.label6);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 6);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(299, 216);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(299, 222);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // label6
             // 
             this.label6.AutoEllipsis = true;
-            this.label6.Location = new System.Drawing.Point(3, 169);
+            this.label6.Location = new System.Drawing.Point(3, 175);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(289, 47);
             this.label6.TabIndex = 32;
@@ -278,20 +283,48 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 236F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 229F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(307, 229);
             this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // flowLayoutPanel8
+            // 
+            this.flowLayoutPanel8.AutoSize = true;
+            this.flowLayoutPanel8.Controls.Add(this.label7);
+            this.flowLayoutPanel8.Controls.Add(this.shema_l);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(139, 3);
+            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(150, 26);
+            this.flowLayoutPanel8.TabIndex = 27;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 6);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(42, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Схема:";
+            // 
+            // shema_l
+            // 
+            this.shema_l.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.shema_l.Location = new System.Drawing.Point(51, 3);
+            this.shema_l.Name = "shema_l";
+            this.shema_l.Size = new System.Drawing.Size(96, 20);
+            this.shema_l.TabIndex = 13;
             // 
             // ConfigSQL
             // 
@@ -318,6 +351,8 @@
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel8.ResumeLayout(false);
+            this.flowLayoutPanel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -346,5 +381,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox shema_l;
     }
 }

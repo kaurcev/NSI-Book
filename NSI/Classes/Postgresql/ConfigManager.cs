@@ -12,9 +12,9 @@ namespace NSI.Classes.Postgresql
         private static DatabaseConfig _dbConfig;
         public static readonly string ConfigFilePath = "dbconfig.json";
 
-        public static void SetDatabaseConfig(string host, string username, string password, string database, string port)
+        public static void SetDatabaseConfig(string host, string username, string password, string database, string port, string shema)
         {
-            _dbConfig = new DatabaseConfig(host, username, password, database, port);
+            _dbConfig = new DatabaseConfig(host, username, password, database, port, shema);
             SaveConfigToFile();
         }
 

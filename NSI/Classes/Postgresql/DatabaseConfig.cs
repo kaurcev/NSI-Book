@@ -12,16 +12,18 @@ namespace NSI.Classes.Postgresql
         public string Password { get; set; }
         public string Database { get; set; }
         public string Port { get; set; }
+        public string Shema { get; set; }
 
         public DatabaseConfig() { }
 
-        public DatabaseConfig(string host, string username, string password, string database, string port)
+        public DatabaseConfig(string host, string username, string password, string database, string port, string shema)
         {
             Host = host;
             Username = username;
             Password = password;
             Database = database;
             Port = port;
+            Shema = shema;
         }
     }
 }

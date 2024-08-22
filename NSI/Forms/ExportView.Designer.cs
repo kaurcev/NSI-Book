@@ -42,7 +42,6 @@
             this.buttonPauseResume = new System.Windows.Forms.Button();
             this.convertToCSV = new System.ComponentModel.BackgroundWorker();
             this.convertToSQL = new System.ComponentModel.BackgroundWorker();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.uploadLoader = new System.ComponentModel.BackgroundWorker();
             this.loadsqlButton = new System.Windows.Forms.Button();
             this.versionBox = new System.Windows.Forms.ComboBox();
@@ -64,7 +63,6 @@
             this.releaseNotes = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.structureNotes = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.demoLoader = new System.ComponentModel.BackgroundWorker();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
@@ -73,6 +71,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.shema_l = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -80,37 +80,34 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.notify = new System.Windows.Forms.NotifyIcon(this.components);
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.archivePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.flowLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanel10.SuspendLayout();
-            this.flowLayoutPanel11.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.flowLayoutPanel11.SuspendLayout();
             this.SuspendLayout();
             // 
             // startButton
@@ -137,7 +134,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(2, 56);
+            this.numericUpDown1.Location = new System.Drawing.Point(2, 76);
             this.numericUpDown1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             5000,
@@ -183,7 +180,7 @@
             // statis
             // 
             this.statis.AutoSize = true;
-            this.statis.Location = new System.Drawing.Point(4, 402);
+            this.statis.Location = new System.Drawing.Point(4, 422);
             this.statis.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.statis.MaximumSize = new System.Drawing.Size(138, 0);
             this.statis.Name = "statis";
@@ -203,7 +200,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(2, 136);
+            this.progressBar1.Location = new System.Drawing.Point(2, 156);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(132, 21);
@@ -211,7 +208,7 @@
             // 
             // progressBar2
             // 
-            this.progressBar2.Location = new System.Drawing.Point(2, 96);
+            this.progressBar2.Location = new System.Drawing.Point(2, 116);
             this.progressBar2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(132, 21);
@@ -244,16 +241,6 @@
             this.convertToSQL.WorkerSupportsCancellation = true;
             this.convertToSQL.DoWork += new System.ComponentModel.DoWorkEventHandler(this.convertToSQL_DoWork);
             this.convertToSQL.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.convertToSQL_RunWorkerCompleted);
-            // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.White;
-            this.textBox1.Location = new System.Drawing.Point(2, 16);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(132, 21);
-            this.textBox1.TabIndex = 14;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // uploadLoader
             // 
@@ -514,23 +501,6 @@
             this.structureNotes.TabIndex = 7;
             this.structureNotes.Text = "structureNotes";
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(2, 25);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 3);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.dataGridView1.Size = new System.Drawing.Size(570, 264);
-            this.dataGridView1.TabIndex = 19;
-            // 
             // demoLoader
             // 
             this.demoLoader.WorkerSupportsCancellation = true;
@@ -615,7 +585,8 @@
             // 
             this.flowLayoutPanel7.AutoSize = true;
             this.flowLayoutPanel7.Controls.Add(this.label3);
-            this.flowLayoutPanel7.Controls.Add(this.textBox1);
+            this.flowLayoutPanel7.Controls.Add(this.label13);
+            this.flowLayoutPanel7.Controls.Add(this.shema_l);
             this.flowLayoutPanel7.Controls.Add(this.label4);
             this.flowLayoutPanel7.Controls.Add(this.numericUpDown1);
             this.flowLayoutPanel7.Controls.Add(this.label5);
@@ -625,7 +596,7 @@
             this.flowLayoutPanel7.Location = new System.Drawing.Point(4, 78);
             this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(136, 160);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(152, 180);
             this.flowLayoutPanel7.TabIndex = 21;
             // 
             // label3
@@ -640,12 +611,34 @@
             this.label3.TabIndex = 22;
             this.label3.Text = "Схема";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Calibri", 7F, System.Drawing.FontStyle.Italic);
+            this.label13.ForeColor = System.Drawing.Color.Gray;
+            this.label13.Location = new System.Drawing.Point(2, 13);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(148, 26);
+            this.label13.TabIndex = 27;
+            this.label13.Text = "Схема редактируется только в настройках конфигурации";
+            // 
+            // shema_l
+            // 
+            this.shema_l.Location = new System.Drawing.Point(2, 39);
+            this.shema_l.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.shema_l.Name = "shema_l";
+            this.shema_l.Size = new System.Drawing.Size(132, 21);
+            this.shema_l.TabIndex = 26;
+            this.shema_l.Text = "label1";
+            this.shema_l.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Calibri Light", 7F);
             this.label4.ForeColor = System.Drawing.Color.Gray;
-            this.label4.Location = new System.Drawing.Point(2, 40);
+            this.label4.Location = new System.Drawing.Point(2, 60);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
@@ -657,7 +650,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Calibri Light", 7F);
             this.label5.ForeColor = System.Drawing.Color.Gray;
-            this.label5.Location = new System.Drawing.Point(2, 80);
+            this.label5.Location = new System.Drawing.Point(2, 100);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(93, 13);
@@ -669,7 +662,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Calibri Light", 7F);
             this.label6.ForeColor = System.Drawing.Color.Gray;
-            this.label6.Location = new System.Drawing.Point(2, 120);
+            this.label6.Location = new System.Drawing.Point(2, 140);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(74, 13);
@@ -685,7 +678,7 @@
             this.flowLayoutPanel8.Controls.Add(this.loadsqlButton);
             this.flowLayoutPanel8.Controls.Add(this.button2);
             this.flowLayoutPanel8.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(4, 244);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(4, 264);
             this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(136, 155);
@@ -726,7 +719,6 @@
             this.flowLayoutPanel4.AutoScroll = true;
             this.flowLayoutPanel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
             this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel1);
-            this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel10);
             this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel11);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -737,68 +729,7 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(600, 489);
             this.flowLayoutPanel4.TabIndex = 0;
             this.flowLayoutPanel4.WrapContents = false;
-            // 
-            // flowLayoutPanel10
-            // 
-            this.flowLayoutPanel10.AutoSize = true;
-            this.flowLayoutPanel10.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanel10.Controls.Add(this.label12);
-            this.flowLayoutPanel10.Controls.Add(this.textBox2);
-            this.flowLayoutPanel10.Location = new System.Drawing.Point(5, 247);
-            this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.flowLayoutPanel10.MaximumSize = new System.Drawing.Size(576, 270);
-            this.flowLayoutPanel10.Name = "flowLayoutPanel10";
-            this.flowLayoutPanel10.Size = new System.Drawing.Size(576, 206);
-            this.flowLayoutPanel10.TabIndex = 22;
-            this.flowLayoutPanel10.Visible = false;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.BackColor = System.Drawing.Color.Transparent;
-            this.label12.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label12.Location = new System.Drawing.Point(2, 2);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 5);
-            this.label12.Name = "label12";
-            this.label12.Padding = new System.Windows.Forms.Padding(2);
-            this.label12.Size = new System.Drawing.Size(84, 18);
-            this.label12.TabIndex = 11;
-            this.label12.Text = "Логи загрузки";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(3, 28);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(570, 175);
-            this.textBox2.TabIndex = 20;
-            // 
-            // flowLayoutPanel11
-            // 
-            this.flowLayoutPanel11.AutoSize = true;
-            this.flowLayoutPanel11.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanel11.Controls.Add(this.label1);
-            this.flowLayoutPanel11.Controls.Add(this.dataGridView1);
-            this.flowLayoutPanel11.Location = new System.Drawing.Point(5, 459);
-            this.flowLayoutPanel11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.flowLayoutPanel11.MaximumSize = new System.Drawing.Size(576, 270);
-            this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(574, 270);
-            this.flowLayoutPanel11.TabIndex = 21;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(2, 2);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 5);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(2);
-            this.label1.Size = new System.Drawing.Size(93, 18);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Демо-просмотр";
+            this.flowLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel4_Paint);
             // 
             // flowLayoutPanel5
             // 
@@ -874,6 +805,49 @@
             this.notify.BalloonTipClicked += new System.EventHandler(this.notify_BalloonTipClicked);
             this.notify.Click += new System.EventHandler(this.notify_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToOrderColumns = true;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(2, 25);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 3);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.dataGridView1.Size = new System.Drawing.Size(570, 264);
+            this.dataGridView1.TabIndex = 19;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(2, 2);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 5);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(2);
+            this.label1.Size = new System.Drawing.Size(93, 18);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Демо-просмотр";
+            // 
+            // flowLayoutPanel11
+            // 
+            this.flowLayoutPanel11.AutoSize = true;
+            this.flowLayoutPanel11.BackColor = System.Drawing.Color.White;
+            this.flowLayoutPanel11.Controls.Add(this.label1);
+            this.flowLayoutPanel11.Controls.Add(this.dataGridView1);
+            this.flowLayoutPanel11.Location = new System.Drawing.Point(5, 247);
+            this.flowLayoutPanel11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.flowLayoutPanel11.MaximumSize = new System.Drawing.Size(576, 270);
+            this.flowLayoutPanel11.Name = "flowLayoutPanel11";
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(574, 270);
+            this.flowLayoutPanel11.TabIndex = 21;
+            // 
             // ExportView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -900,7 +874,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel6.ResumeLayout(false);
             this.flowLayoutPanel6.PerformLayout();
@@ -911,15 +884,14 @@
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
-            this.flowLayoutPanel10.ResumeLayout(false);
-            this.flowLayoutPanel10.PerformLayout();
-            this.flowLayoutPanel11.ResumeLayout(false);
-            this.flowLayoutPanel11.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.flowLayoutPanel11.ResumeLayout(false);
+            this.flowLayoutPanel11.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -937,7 +909,6 @@
         private System.Windows.Forms.Button buttonPauseResume;
         private System.ComponentModel.BackgroundWorker convertToCSV;
         private System.ComponentModel.BackgroundWorker convertToSQL;
-        private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker uploadLoader;
         private System.Windows.Forms.Button loadsqlButton;
         private System.Windows.Forms.ComboBox versionBox;
@@ -950,7 +921,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Label lastUpdate;
         private System.Windows.Forms.Label publishDate;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.ComponentModel.BackgroundWorker demoLoader;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -980,12 +950,12 @@
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel11;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label shema_l;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel11;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel10;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 
