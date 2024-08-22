@@ -32,11 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.7\lib\net35\Mono.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Npgsql, Version=2.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.7\lib\net35\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -46,8 +53,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Combi.cs" />
+    <Compile Include="Classes\DataGridViewFiller.cs" />
+    <Compile Include="Classes\Postgresql\ConfigManager.cs" />
+    <Compile Include="Classes\Postgresql\DatabaseConfig.cs" />
     <Compile Include="Classes\Sv.cs" />
     <Compile Include="Classes\Tools.cs" />
+    <Compile Include="Forms\ConfigSQL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConfigSQL.Designer.cs">
+      <DependentUpon>ConfigSQL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateTableView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateTableView.Designer.cs">
+      <DependentUpon>CreateTableView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainView.Designer.cs">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExportView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +85,27 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControlls\ColumnItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\ColumnItem.Designer.cs">
+      <DependentUpon>ColumnItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlls\SearchItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\SearchItem.Designer.cs">
+      <DependentUpon>SearchItem.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\ConfigSQL.resx">
+      <DependentUpon>ConfigSQL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateTableView.resx">
+      <DependentUpon>CreateTableView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainView.resx">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportView.resx">
       <DependentUpon>ExportView.cs</DependentUpon>
     </EmbeddedResource>
@@ -67,7 +117,14 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UserControlls\ColumnItem.resx">
+      <DependentUpon>ColumnItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlls\SearchItem.resx">
+      <DependentUpon>SearchItem.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -78,6 +135,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\font.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qlogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home_b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\files_b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\serv_b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive_b.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

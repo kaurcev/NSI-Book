@@ -15,7 +15,7 @@ namespace NSI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ExportView());
+            Application.Run(new MainView());
         }
     }
 }
