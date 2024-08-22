@@ -1,16 +1,24 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NSI.Classes;
+using NSI.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using static Mono.Security.X509.X520;
+using static NSI.ExportView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
@@ -18,43 +26,78 @@ namespace NSI
 {
     public partial class ExportView : Form
     {
-        public static string oid = "1.2.643.5.1.13.13.99.2.228";
+        public static string oid = "1.2.643.5.1.13.13.99.2.114";
         public static string version = "3.5";
         public static string total = "1317";
         public static string key = "id";
 
         public static string destinationBasePath = @".\dump_sql\";
 
+        public static Responce_v resp_version;
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
+        public static Responce responsed;
         private bool isPaused = false;
 
         public static double stepint = 500;
         private double step = 0;
+        string DemoJson;
 
         private List<string> failedFiles = new List<string>();
 
         public ExportView()
         {
             InitializeComponent();
+            this.KeyPreview = true; 
+            this.KeyDown += new KeyEventHandler(MainForm_KeyDown);
+        }
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5)
+            {
+                CreateTableView view = new CreateTableView();
+                CreateTableView.OID = oid_l.Text;
+                CreateTableView.NOTE = structureNotes.Text;
+                CreateTableView.VERSION = version_l.Text;
+                CreateTableView.chema = textBox1.Text;
+                view.Show();
+            }
+        }
+        public void Correct()
+        {
+            flowLayoutPanel4.Invalidate();
+            flowLayoutPanel4.Refresh();
         }
 
         private void ExportView_Load(object sender, EventArgs e)
         {
             oid_l.Text = oid;
             version_l.Text = version;
-            label23.Text = total;
+            versionLoader.RunWorkerAsync();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            numericUpDown1.Enabled = false;
-            buttonPauseResume.Enabled = true;
-            dataLoader.RunWorkerAsync();
+            if(Tools.Fix(textBox1.Text) != "Данные отсутствуют.")
+            {
+                Tools.NotivState(notify, "Подготовка к работе...");
+                versionBox.Enabled = false;
+                startButton.Enabled = false;
+                numericUpDown1.Enabled = false;
+                textBox1.Enabled = false;
+                buttonPauseResume.Enabled = true;
+                dataLoader.RunWorkerAsync();
+            }
+            else
+            {
+                textBox1.BackColor = Color.FromArgb(255, 255, 192, 192);
+                MessageBox.Show("Укажите схему!");
+            }
+
         }
 
         private void dataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            label1.Text = "Загрузка данных";
+            statis.Text = "Загрузка данных";
             string baseFolderPath = $@".//temp//{oid_l.Text}//";
             if (Directory.Exists(baseFolderPath))
             {
@@ -74,8 +117,8 @@ namespace NSI
                 }
             }
 
-            recov.Visible = true;
-            recov.Text = "Проверка целостности";
+            Tools.NotivState(notify, "Проверка целостности");
+            statis.Text = "Проверка целостности";
             foreach (int page in failedPages)
             {
                 pauseEvent.WaitOne();
@@ -83,10 +126,12 @@ namespace NSI
                 {
                     Directory.CreateDirectory(baseFolderPath);
                 }
-                recov.Text = $"Докачка и восстановление тома №{page}";
+                statis.Text = $"Докачка и восстановление тома №{page}";
+                Tools.NotivState(notify, $"Докачка и восстановление тома №{page}");
                 LoadDataFromUrl(page, null);
             }
-            recov.Text = "Восстановление завершено";
+            Tools.NotivState(notify, "Восстановление завершено");
+            statis.Text = "Восстановление завершено";
         }
 
         private bool LoadDataFromUrl(int page, List<int> failedPages)
@@ -96,6 +141,7 @@ namespace NSI
                 this.Invoke((MethodInvoker)delegate
                 {
                     statis.Text = $"Загрузка {page} / {step} тома. \nВ томе до {numericUpDown1.Value} значений. \nВсего: {label23.Text} значений";
+                    Tools.NotivState(notify, $"Загрузка: {page} из {step}");
                 });
 
                 string filePath = $@".//temp//{oid_l.Text}//data_{page}.json";
@@ -152,13 +198,8 @@ namespace NSI
         {
             this.Invoke((MethodInvoker)delegate
             {
-                // Tools.MessageShow(notify, "Ошибка", message, 5);
+                Tools.MessageShow(notify, "Ошибка", message, 5);
             });
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            // Реализация не предоставлена
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -178,35 +219,30 @@ namespace NSI
 
         private void dataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            label1.Text = "Загрузка данных завершена";
+            Tools.NotivState(notify, "Загрузка данных завершена");
+            statis.Text = "Загрузка данных завершена";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            numericUpDown1.Enabled = true;
-            // buttonPauseResume.Enabled = false;
             convertToCSV.RunWorkerAsync();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            convertToCSV.RunWorkerAsync();
-        }
         public string exporturl = "";
         private void convertToCSV_DoWork(object sender, DoWorkEventArgs e)
         {
+            Tools.NotivState(notify, "Запуск конвертации в CSV");
             dataLoader.CancelAsync();
-            label1.Text = "Конвертация данных в CSV";
+            statis.Text = "Конвертация данных в CSV";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            recov.Visible = false;
             try
             {
                 string exportPath = Path.Combine(".//data", oid_l.Text);
-                if (Directory.Exists(exportPath))
-                {
-                    Directory.Delete(exportPath, true);
-                }
                 CreateDirectoryIfNotExists(exportPath);
                 string versionFolderPath = Path.Combine(exportPath, version_l.Text);
+                if (Directory.Exists(versionFolderPath))
+                {
+                    Directory.Delete(versionFolderPath, true);
+                }
                 exporturl = versionFolderPath;
                 CreateDirectoryIfNotExists(versionFolderPath);
 
@@ -219,12 +255,11 @@ namespace NSI
                         failedIndexes.Add(index);
                     }
                 }
-                recov.Visible = true;
-                recov.Text = "Проверка целостнности";
+                statis.Text = "Проверка целостнности";
                 RetryFailedFiles(failedIndexes, versionFolderPath);
-
-                // Tools.NotivState(notify, "Экспорт завершён");
-                // Tools.MessageShow(notify, "Успешно", "Экспорт завершён", 5);
+                Tools.NotivState(notify, "Экспорт завершён");
+                statis.Text = $"Экспорт завершён";
+                Tools.MessageShow(notify, "Успешно", "Экспорт завершён", 5);
             }
             catch (Exception ex)
             {
@@ -234,11 +269,12 @@ namespace NSI
 
         private bool ExportJsonToCsv(int index, string versionFolderPath)
         {
-           // Tools.NotivState(notify, $"Экспорт: {index} из {step}");
+            statis.Text = $"Конвертация в CSV: {index} из {step}";
+            Tools.NotivState(notify, $"Конвертация в CSV: {index} из {step}");
             string jsonFilePathtemp = Path.Combine(".//temp", oid_l.Text);
             string jsonFilePath = Path.Combine(jsonFilePathtemp, $"data_{index}.json");
             string csvFilePath = Path.Combine(versionFolderPath, $"data_{index}.csv");
-            progressBar2.Value = Convert.ToInt32((index * 100) / step);
+            progressBar1.Value = Convert.ToInt32((index * 100) / step);
             if (!FileExists(jsonFilePath, index))
             {
                 return false;
@@ -251,7 +287,7 @@ namespace NSI
             }
             else
             {
-              //  Tools.MessageShow(notify, "Ошибка", "Не удалось экспортировать данные", 5);
+                Tools.MessageShow(notify, "Ошибка", "Не удалось экспортировать данные", 5);
                 return false;
             }
         }
@@ -260,7 +296,7 @@ namespace NSI
         {
             if (!File.Exists(filePath))
             {
-               // Tools.MessageShow(notify, "Ошибка", $"Том {index} отсутствует, экспорт невозможен", 5);
+                Tools.MessageShow(notify, "Ошибка", $"Том {index} отсутствует, экспорт невозможен", 5);
                 return false;
             }
             return true;
@@ -271,11 +307,11 @@ namespace NSI
             foreach (int index in failedIndexes)
             {
                 pauseEvent.WaitOne();
-                // Tools.NotivState(notify, $"Повторная попытка экспорта: {index} из {step}");
-                recov.Text = $"Повторная попытка экспорта: №{index}";
+                Tools.NotivState(notify, $"Повторная попытка экспорта тома №{index}");
+                statis.Text = $"Повторная попытка экспорта тома №{index}";
                 ExportJsonToCsv(index, versionFolderPath);
             }
-              recov.Text = "Восстаноление завершено";
+            statis.Text = "Восстаноление завершено";
         }
 
         private bool TryExportJsonToCsv(string jsonFilePath, string csvFilePath)
@@ -316,7 +352,7 @@ namespace NSI
         private void HandleExportError(Exception ex)
         {
             Sv.Log(ex.Message, ex.StackTrace);
-            // Tools.MessageShow(notify, "Ошибка", "Произошла ошибка: " + ex.Message, 5);
+            Tools.MessageShow(notify, "Ошибка", "Произошла ошибка: " + ex.Message, 5);
         }
         private void CreateDirectoryIfNotExists(string path)
         {
@@ -334,7 +370,7 @@ namespace NSI
 
         private void convertToCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            label1.Text = "Конвертация данных в CSV завершена";
+            statis.Text = "Конвертация данных в CSV завершена";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
             dataLoader.CancelAsync();
@@ -344,10 +380,12 @@ namespace NSI
         private void convertToSQL_DoWork(object sender, DoWorkEventArgs e)
         {
             convertToCSV.CancelAsync();
-            label1.Text = "Конвертация данных в SQL";
+            Tools.NotivState(notify, $"Конвертация в SQL");
+            statis.Text = "Конвертация данных в SQL";
             try
             {
-                // Tools.MessageShow(notify, "Загрузка", "Запущен экспорт в SQL", 5);
+                Tools.MessageShow(notify, "Загрузка", "Запущен экспорт в SQL", 5);
+                Tools.NotivState(notify, $"Запущен экспорт в SQL");
                 string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
                 string destinationPath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}\";
                 string fixedText2 = textBox1.Text;
@@ -386,7 +424,7 @@ namespace NSI
                     catch (Exception  ex)
                     {
                         failedFiles.Add(csvFilePath);
-                       // Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {csvFilePath} - {ex.Message}", 5);
+                        Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {csvFilePath} - {ex.Message}", 5);
                     }
                 }
 
@@ -394,7 +432,7 @@ namespace NSI
             }
             catch (Exception ex)
             {
-              //  Tools.MessageShow(notify, "Ошибка!", "Ошибка при загрузке папок: " + ex.Message, 5);
+               Tools.MessageShow(notify, "Ошибка!", "Ошибка при загрузке папок: " + ex.Message, 5);
                 MessageBox.Show("Произошла ошибка: " + ex.Message);
                 Sv.Log(ex.Message, ex.StackTrace);
             }
@@ -406,20 +444,21 @@ namespace NSI
                 pauseEvent.WaitOne();
                 try
                 {
-                    ProcessCsvFile(failedFile, outputFolderPath, tableName, schemaName);
-                  //  Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
+                   ProcessCsvFile(failedFile, outputFolderPath, tableName, schemaName);
+                   Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
                 }
                 catch (Exception ex)
                 {
-                  //  Tools.MessageShow(notify, "Ошибка", $"Ошибка при повторной обработке файла: {failedFile} - {ex.Message}", 5);
+                   Tools.MessageShow(notify, "Ошибка", $"Ошибка при повторной обработке файла: {failedFile} - {ex.Message}", 5);
                 }
             }
         }
+        public string pathsql;
         private void ProcessCsvFile(string csvFilePath, string outputFolderPath, string tableName, string schemaName)
         {
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(csvFilePath);
             string sqlFilePath = Path.Combine(outputFolderPath, fileNameWithoutExtension + ".sql");
-
+            pathsql = sqlFilePath;
             using (StreamWriter sw = new StreamWriter(sqlFilePath, false, Encoding.Default))
             using (StreamReader sr = new StreamReader(csvFilePath, Encoding.Default))
             {
@@ -460,9 +499,9 @@ namespace NSI
         }
         private void UpdateProgress(int current, int total)
         {
-          //  Tools.NotivState(notify, $"Подготовка скриптов: {current} из {total}");
+            Tools.NotivState(notify, $"Конвертация в SQL: {current} из {total}");
+            statis.Text = $" Конвертация в SQL: {current} из {total}";
             int percentComplete = (int)((current * 100) / total);
-         //    label22.Text = $"Подготовка скриптов: {current} из {total}";
             progressBar1.Value = percentComplete;
         }
 
@@ -471,10 +510,263 @@ namespace NSI
             convertToSQL.CancelAsync();
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            label1.Text = "Конвертация данных в SQL завершена. Можете загрузить данные";
-            button1.Enabled = true;
+            statis.Text = "Конвертация данных в SQL завершена. Можете загрузить данные";
+            Tools.NotivState(notify, $"Конвертация данных в SQL завершена");
+            Tools.MessageShow(notify, "Скрипты готовы к загрузке", $"Скрипты справочника {oid_l.Text} готовы к загрузке", 5);
+            startButton.Enabled = true;
+            textBox1.Enabled = true;
             numericUpDown1.Enabled = true;
             buttonPauseResume.Enabled = false;
+            loadsqlButton.Enabled = true;
+            versionBox.Enabled = true;
+        }
+
+
+        public class Responce_v
+        {
+            public string Result { get; set; }
+            public object ResultText { get; set; }
+            public object ResultCode { get; set; }
+            public List<Versions> List { get; set; }
+        }
+        public class Versions
+        {
+            public string version { get; set; }
+            public object createDate { get; set; }
+            public object publishDate { get; set; }
+            public object releaseNotes { get; set; }
+            public bool archive { get; set; }
+        }
+
+        private void versionLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetVersionUrl();
+                resp_version = JsonConvert.DeserializeObject<Responce_v>(Tools.Fetch(url));
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+        private string GetVersionUrl()
+        {
+            return $"http://{Tools.NSIServer}/port/rest/versions?userKey={Tools.userKey}&identifier={oid_l.Text}&page=1";
+        }
+
+        private void versionBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            version = versionBox.SelectedItem?.ToString();
+            version_l.Text = version;
+            if (!string.IsNullOrEmpty(version))
+            {
+                try
+                {
+                      infoDataLoader.RunWorkerAsync();
+                      demoLoader.RunWorkerAsync();
+                }
+                catch (Exception ex)
+                {
+                    Tools.MessageShow(notify, "Ошибка", "Ошибка при запуске загрузчиков: " + ex.Message, 5);
+                }
+            }
+        }
+
+        private void versionLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке версий: " + e.Error.Message, 5);
+                return;
+            }
+
+            versionBox.Items.Clear();
+
+            foreach (var item in resp_version.List)
+            {
+                versionBox.Items.Add(item.version);
+            }
+
+            if (versionBox.Items.Count > 0)
+            {
+                versionBox.SelectedIndex = 0;
+            }
+        }
+
+        private void infoDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Tools.NotivState(notify, "Готов к работе");
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке данных: " + e.Error.Message, 5);
+                return;
+            }
+
+            if (responsed != null)
+            {
+                Tools.Title(this, String.Format("{0} v{1}", responsed.fullName, version_l.Text));
+                label23.Text = $"{responsed.rowsCount}";
+                oid_l.Text = Tools.Fix(responsed.oid);
+                fullName.Text = Tools.Fix(responsed.fullName);
+                createDate.Text = Tools.Fix($"Создан: {responsed.createDate}");
+                lastUpdate.Text = Tools.Fix($"Обновлён: {responsed.lastUpdate}");
+                publishDate.Text = Tools.Fix($"Опубликован: {responsed.publishDate}");
+                description.Text = Tools.Fix(responsed.description);
+                structureNotes.Text = Tools.Fix(responsed.structureNotes);
+                releaseNotes.Text = Tools.Fix(responsed.releaseNotes);
+                archivePanel.Visible = responsed.archive;
+            }
+        }
+        private string GetDataUrl(string oid, string version)
+        {
+            return $"http://{Tools.NSIServer}/port/rest/passport?userKey={Tools.userKey}&identifier={oid}&version={version}";
+        }
+        public class Responce
+        {
+            public string Result { get; set; }
+            public object ResultText { get; set; }
+            public object ResultCode { get; set; }
+            public string fullName { get; set; }
+            public string oid { get; set; }
+            public string version { get; set; }
+            public string createDate { get; set; }
+            public string publishDate { get; set; }
+            public string lastUpdate { get; set; }
+            public string description { get; set; }
+            public string structureNotes { get; set; }
+            public string releaseNotes { get; set; }
+            public bool archive { get; set; }
+            public int rowsCount { get; set; }
+        }
+
+        private void infoDataLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetDataUrl(oid_l.Text, version_l.Text);
+                responsed = JsonConvert.DeserializeObject<Responce>(Tools.Fetch(url));
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+
+        private void demoLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            if (e.Error != null)
+            {
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке демонстрационных данных: " + e.Error.Message, 5);
+                return;
+            }
+
+            if (DemoJson != null)
+            {
+                DataGridViewFiller.FillDataGridView(dataGridView1, DemoJson);
+            }
+        }
+        private string GetDemoDataUrl(string oid, string version)
+        {
+            return $"http://{Tools.NSIServer}/port/rest/data?userKey={Tools.userKey}&identifier={oid}&version={version}&page=1&size=10";
+        }
+
+        private void demoLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetDemoDataUrl(oid_l.Text, version_l.Text);
+                DemoJson = Tools.Fetch(url);
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            ConfigSQL view = new ConfigSQL();
+            view.ShowDialog();
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            string exportPath = Path.Combine(".//data", oid_l.Text);
+            Tools.OpenFolder(exportPath);
+        }
+
+        private void ExportView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Tools.DeadApp();
+        }
+
+        private void notify_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void notify_BalloonTipClicked(object sender, EventArgs e)
+        {
+            this.Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void ExportView_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState)
+            {
+                Hide();
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            textBox1.BackColor = Color.White;
+        }
+
+        private void loadsqlButton_Click_1(object sender, EventArgs e)
+        {
+            uploadLoader.RunWorkerAsync();
+        }
+
+        public void upliad()
+        {
+
+        }
+
+        private void uploadLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
+            string[] sqlFiles = Directory.GetFiles(sourcePath, "*.sql");
+
+            foreach (string sqlPath in sqlFiles)
+            {
+                try
+                {
+                    textBox2.Text = Tools.ImportToPGSQL(sqlPath);
+                }
+                catch (Exception ex)
+                {
+                    Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {sqlPath} - {ex.Message}", 5);
+                }
+            }
+        }
+
+        private void uploadLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MessageBox.Show("Ееее");
         }
     }
 }
