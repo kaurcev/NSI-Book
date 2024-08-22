@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NSI.Classes;
+using NSI.Classes.Postgresql;
 using NSI.Forms;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,8 @@ namespace NSI
         public static Responce responsed;
         private bool isPaused = false;
 
+        DatabaseConfig config = ConfigManager.GetDatabaseConfig();
+
         public static double stepint = 500;
         private double step = 0;
         string DemoJson;
@@ -58,7 +61,6 @@ namespace NSI
                 CreateTableView.OID = oid_l.Text;
                 CreateTableView.NOTE = structureNotes.Text;
                 CreateTableView.VERSION = version_l.Text;
-                CreateTableView.chema = textBox1.Text;
                 view.Show();
             }
         }
@@ -72,25 +74,26 @@ namespace NSI
         {
             oid_l.Text = oid;
             version_l.Text = version;
+            shema_l.Text = config.Shema;
             versionLoader.RunWorkerAsync();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(Tools.Fix(textBox1.Text) != "Данные отсутствуют.")
+            config = ConfigManager.GetDatabaseConfig();
+            shema_l.Text = config.Shema;
+            if (Tools.Fix(config.Shema) != "Данные отсутствуют.")
             {
                 Tools.NotivState(notify, "Подготовка к работе...");
                 versionBox.Enabled = false;
                 startButton.Enabled = false;
                 numericUpDown1.Enabled = false;
-                textBox1.Enabled = false;
                 buttonPauseResume.Enabled = true;
                 dataLoader.RunWorkerAsync();
             }
             else
             {
-                textBox1.BackColor = Color.FromArgb(255, 255, 192, 192);
-                MessageBox.Show("Укажите схему!");
+                MessageBox.Show("Укажите схему в настройках конфигурации!");
             }
 
         }
@@ -388,20 +391,19 @@ namespace NSI
                 Tools.NotivState(notify, $"Запущен экспорт в SQL");
                 string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
                 string destinationPath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}\";
-                string fixedText2 = textBox1.Text;
                 if (Directory.Exists(destinationPath))
                 {
                     Directory.Delete(destinationPath, true);
                 }
 
-                ExportSql(sourcePath, destinationPath, oid_l.Text, fixedText2);
+                ExportSql(sourcePath, destinationPath, oid_l.Text);
             }
             catch (Exception ex)
             {
                 Sv.Log(ex.Message, ex.StackTrace);
             }
         }
-        public void ExportSql(string folderPath, string outputFolderPath, string tableName, string schemaName)
+        public void ExportSql(string folderPath, string outputFolderPath, string tableName)
         {
             CreateDirectoryIfNotExists(folderPath);
             CreateDirectoryIfNotExists(outputFolderPath);
@@ -418,7 +420,7 @@ namespace NSI
 
                     try
                     {
-                        ProcessCsvFile(csvFilePath, outputFolderPath, tableName, schemaName);
+                        ProcessCsvFile(csvFilePath, outputFolderPath, tableName);
                         UpdateProgress(io++, csvFiles.Length);
                     }
                     catch (Exception  ex)
@@ -428,7 +430,7 @@ namespace NSI
                     }
                 }
 
-                RetryFailedFiles(failedFiles, outputFolderPath, tableName, schemaName);
+                RetryFailedFiles(failedFiles, outputFolderPath, tableName);
             }
             catch (Exception ex)
             {
@@ -437,14 +439,14 @@ namespace NSI
                 Sv.Log(ex.Message, ex.StackTrace);
             }
         }
-        private void RetryFailedFiles(List<string> failedFiles, string outputFolderPath, string tableName, string schemaName)
+        private void RetryFailedFiles(List<string> failedFiles, string outputFolderPath, string tableName)
         {
             foreach (string failedFile in failedFiles)
             {
                 pauseEvent.WaitOne();
                 try
                 {
-                   ProcessCsvFile(failedFile, outputFolderPath, tableName, schemaName);
+                   ProcessCsvFile(failedFile, outputFolderPath, tableName);
                    Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
                 }
                 catch (Exception ex)
@@ -454,7 +456,7 @@ namespace NSI
             }
         }
         public string pathsql;
-        private void ProcessCsvFile(string csvFilePath, string outputFolderPath, string tableName, string schemaName)
+        private void ProcessCsvFile(string csvFilePath, string outputFolderPath, string tableName)
         {
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(csvFilePath);
             string sqlFilePath = Path.Combine(outputFolderPath, fileNameWithoutExtension + ".sql");
@@ -470,14 +472,14 @@ namespace NSI
                 }
 
                 string[] columns = ProcessHeaderLine(headerLine);
-
+              
                 while (!sr.EndOfStream)
                 {
                     pauseEvent.WaitOne();
 
                     string line = sr.ReadLine();
                     string[] values = ProcessDataLine(line);
-                    string insertStatement = GenerateInsertStatement(tableName, columns, values, schemaName);
+                    string insertStatement = GenerateInsertStatement(tableName, columns, values);
                     sw.WriteLine(insertStatement);
                 }
             }
@@ -486,11 +488,11 @@ namespace NSI
         {
             return headerLine.Split('|').Select(column => string.IsNullOrEmpty(column) ? "NULL" : "\"" + column.Replace("\"", "") + "\"").ToArray();
         }
-        public string GenerateInsertStatement(string tableName, string[] columns, string[] values, string schemaName)
+        public string GenerateInsertStatement(string tableName, string[] columns, string[] values)
         {
             string columnsPart = string.Join(", ", columns);
             string valuesPart = string.Join(", ", values);
-            return $"INSERT INTO \"{schemaName}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
+            return $"INSERT INTO \"{config.Shema}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
         }
 
         private string[] ProcessDataLine(string line)
@@ -508,17 +510,12 @@ namespace NSI
         private void convertToSQL_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             convertToSQL.CancelAsync();
+            statis.Text = "Конвертация данных в SQL завершена. Подготовка к загрузке";
+            Tools.NotivState(notify, $"Конвертация данных в SQL завершена. Подготовка к загрузке");
+            Tools.MessageShow(notify, "Скрипты готовы к загрузке", $"Загрузка скриптов справочника {oid_l.Text} в БД", 5);
+            uploadLoader.RunWorkerAsync();
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            statis.Text = "Конвертация данных в SQL завершена. Можете загрузить данные";
-            Tools.NotivState(notify, $"Конвертация данных в SQL завершена");
-            Tools.MessageShow(notify, "Скрипты готовы к загрузке", $"Скрипты справочника {oid_l.Text} готовы к загрузке", 5);
-            startButton.Enabled = true;
-            textBox1.Enabled = true;
-            numericUpDown1.Enabled = true;
-            buttonPauseResume.Enabled = false;
-            loadsqlButton.Enabled = true;
-            versionBox.Enabled = true;
         }
 
 
@@ -730,43 +727,40 @@ namespace NSI
             WindowState = FormWindowState.Minimized;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            textBox1.BackColor = Color.White;
-        }
-
         private void loadsqlButton_Click_1(object sender, EventArgs e)
         {
             uploadLoader.RunWorkerAsync();
         }
 
-        public void upliad()
-        {
-
-        }
-
         private void uploadLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
+            string sourcePath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}";
             string[] sqlFiles = Directory.GetFiles(sourcePath, "*.sql");
-
             foreach (string sqlPath in sqlFiles)
             {
                 try
                 {
-                    textBox2.Text = Tools.ImportToPGSQL(sqlPath);
+                    MessageBox.Show(Tools.ImportToPGSQL(sqlPath));
                 }
                 catch (Exception ex)
                 {
-                    Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {sqlPath} - {ex.Message}", 5);
+                    MessageBox.Show("Ошибка", $"Ошибка при обработке файла: {sqlPath} - {ex.Message}");
                 }
             }
         }
 
         private void uploadLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Ееее");
+            startButton.Enabled = true;
+            numericUpDown1.Enabled = true;
+            buttonPauseResume.Enabled = false;
+            loadsqlButton.Enabled = true;
+            versionBox.Enabled = true;
+        }
+
+        private void flowLayoutPanel4_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

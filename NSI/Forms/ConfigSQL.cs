@@ -68,7 +68,8 @@ namespace NSI.Forms
             string password = textBoxPassword.Text;
             string database = textBoxDatabase.Text;
             string port = port_l.Text;
-            ConfigManager.SetDatabaseConfig(host, username, password, database, port);
+            string shema = shema_l.Text;
+            ConfigManager.SetDatabaseConfig(host, username, password, database, port, shema);
             MessageBox.Show("Параметры подключения сохранены. Можете закрыть окно");
         }
 
@@ -80,6 +81,7 @@ namespace NSI.Forms
             textBoxPassword.Text = config.Password;
             textBoxDatabase.Text = config.Database;
             port_l.Text = config.Port;
+            shema_l.Text = config.Shema;
         }
 
         private void button2_Click(object sender, EventArgs e)

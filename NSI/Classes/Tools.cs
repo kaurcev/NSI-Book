@@ -107,18 +107,8 @@ namespace NSI.Classes
         {
             try
             {
-                DatabaseConfig config = ConfigManager.GetDatabaseConfig();
-                string connectionString = $"Host={config.Host};Port={config.Port};Username={config.Username};Password={config.Password};Database={config.Database}";
-
-                using (var connection = new NpgsqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string sqlScript = File.ReadAllText(sqlFilePath, Encoding.Default);
-                    using (var command = new NpgsqlCommand(sqlScript, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                }
+                string sqlScript = File.ReadAllText(sqlFilePath, Encoding.Default);
+                sqlcommand(sqlScript);
                 return $"[ Загружен скрипт: {sqlFilePath} ]{Environment.NewLine}";
             }
             catch (Exception ex)
@@ -128,5 +118,18 @@ namespace NSI.Classes
             }
         }
 
+        public static void sqlcommand(string commandcode)
+        {
+            DatabaseConfig config = ConfigManager.GetDatabaseConfig();
+            string connectionString = $"Host={config.Host};Port={config.Port};Username={config.Username};Password={config.Password};Database={config.Database}";
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new NpgsqlCommand(commandcode, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
