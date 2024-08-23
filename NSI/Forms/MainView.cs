@@ -49,7 +49,7 @@ namespace NSI
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            Tools.OpenFolder(".//data");
+            Tools.OpenFolder(@".\data\");
         }
 
         private void MainView_FormClosed(object sender, FormClosedEventArgs e)
@@ -60,6 +60,8 @@ namespace NSI
         private void MainView_Load(object sender, EventArgs e)
         {
             Tools.Title(this, "Добро пожаловать!");
+            UserControl view = new WelcomeBanner();
+            flowLayoutPanel1.Controls.Add(view);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -110,6 +112,9 @@ namespace NSI
 
                 if (queryText != null)
                 {
+                    flowLayoutPanel1.Controls.Clear();
+                    UserControl view = new SearchBanner();
+                    flowLayoutPanel1.Controls.Add(view);
                     Tools.Title(this, $"Поиск по запросу: \"{queryText}\"");;
                     searchButton.Enabled = false;
                     searchLoader.RunWorkerAsync();
@@ -203,8 +208,9 @@ namespace NSI
             {
                 if (responsed.List.Count == 0)
                 {
-                    // UserControl view = new NotFoundBanner();
-                    //   flowLayoutPanel4.Controls.Add(view);
+                    flowLayoutPanel1.Controls.Clear();
+                    UserControl view = new NotFoundBanner();
+                    flowLayoutPanel1.Controls.Add(view);
                 }
                 foreach (var item in responsed.List)
                 {
@@ -224,8 +230,9 @@ namespace NSI
             catch (Exception ex)
             {
                 Sv.Log(ex.Message, ex.StackTrace);
-                // var noFoundView = new ErrorJopBanner();
-                //    flowLayoutPanel4.Controls.Add(noFoundView);
+                flowLayoutPanel1.Controls.Clear();
+                var noFoundView = new ErrorJopBanner();
+                flowLayoutPanel1.Controls.Add(noFoundView);
             }
             statics.Text = $"Показаны {responsed.List.Count} справочников";
             searchButton.Enabled = true;

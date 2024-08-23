@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -41,11 +42,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label16 = new System.Windows.Forms.Label();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
@@ -53,19 +58,23 @@
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.label7 = new System.Windows.Forms.Label();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.label5 = new System.Windows.Forms.Label();
             this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.searchLoader = new System.ComponentModel.BackgroundWorker();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -101,7 +110,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 489);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 510);
             this.tableLayoutPanel1.TabIndex = 20;
             // 
             // tableLayoutPanel2
@@ -117,7 +126,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(594, 483);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(594, 504);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // flowLayoutPanel1
@@ -129,7 +138,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 65);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(594, 418);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(594, 439);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -242,6 +251,7 @@
             // flowLayoutPanel6
             // 
             this.flowLayoutPanel6.BackColor = System.Drawing.Color.White;
+            this.flowLayoutPanel6.Controls.Add(this.label16);
             this.flowLayoutPanel6.Controls.Add(this.flowLayoutPanel7);
             this.flowLayoutPanel6.Controls.Add(this.flowLayoutPanel8);
             this.flowLayoutPanel6.Controls.Add(this.flowLayoutPanel12);
@@ -252,40 +262,76 @@
             this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(160, 489);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(160, 510);
             this.flowLayoutPanel6.TabIndex = 2;
             this.flowLayoutPanel6.WrapContents = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label16.Location = new System.Drawing.Point(4, 3);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 12);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(146, 18);
+            this.label16.TabIndex = 26;
+            this.label16.Text = "ПАРАМЕТРЫ ПОИСКА";
             // 
             // flowLayoutPanel7
             // 
             this.flowLayoutPanel7.AutoSize = true;
+            this.flowLayoutPanel7.Controls.Add(this.label23);
+            this.flowLayoutPanel7.Controls.Add(this.label4);
             this.flowLayoutPanel7.Controls.Add(this.checkBox1);
             this.flowLayoutPanel7.Controls.Add(this.textBox2);
-            this.flowLayoutPanel7.Controls.Add(this.label4);
             this.flowLayoutPanel7.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(4, 5);
-            this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel7.Location = new System.Drawing.Point(4, 35);
+            this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 10);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(152, 76);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(152, 90);
             this.flowLayoutPanel7.TabIndex = 5;
             this.flowLayoutPanel7.WrapContents = false;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold);
+            this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.label23.Location = new System.Drawing.Point(2, 0);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(85, 14);
+            this.label23.TabIndex = 25;
+            this.label23.Text = "ПОИСК ПО OID";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Calibri Light", 7F);
+            this.label4.ForeColor = System.Drawing.Color.Gray;
+            this.label4.Location = new System.Drawing.Point(2, 14);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(148, 26);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "При включеном параметре поиск будет только по OID справочника";
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.checkBox1.Location = new System.Drawing.Point(3, 3);
+            this.checkBox1.Location = new System.Drawing.Point(3, 43);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(41, 17);
+            this.checkBox1.Size = new System.Drawing.Size(84, 17);
             this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "OID";
+            this.checkBox1.Text = "Использовать";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Calibri", 8.25F);
-            this.textBox2.Location = new System.Drawing.Point(2, 26);
+            this.textBox2.Location = new System.Drawing.Point(2, 66);
             this.textBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(132, 21);
@@ -293,42 +339,55 @@
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyDown);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.label4.ForeColor = System.Drawing.Color.Gray;
-            this.label4.Location = new System.Drawing.Point(2, 50);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(148, 26);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "При включеном параметре поиск будет только по OID справочника";
-            // 
             // flowLayoutPanel8
             // 
             this.flowLayoutPanel8.AutoSize = true;
+            this.flowLayoutPanel8.Controls.Add(this.label13);
+            this.flowLayoutPanel8.Controls.Add(this.label5);
             this.flowLayoutPanel8.Controls.Add(this.checkBox2);
             this.flowLayoutPanel8.Controls.Add(this.flowLayoutPanel9);
             this.flowLayoutPanel8.Controls.Add(this.flowLayoutPanel10);
-            this.flowLayoutPanel8.Controls.Add(this.label5);
             this.flowLayoutPanel8.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(4, 85);
-            this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(4, 137);
+            this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(2, 2, 2, 10);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(152, 107);
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(152, 121);
             this.flowLayoutPanel8.TabIndex = 7;
             this.flowLayoutPanel8.WrapContents = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold);
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.label13.Location = new System.Drawing.Point(2, 0);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(112, 14);
+            this.label13.TabIndex = 26;
+            this.label13.Text = "ДАТА ПУБЛИКАЦИИ";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Calibri Light", 7F);
+            this.label5.ForeColor = System.Drawing.Color.Gray;
+            this.label5.Location = new System.Drawing.Point(2, 14);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(148, 26);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "При включеном параметре поиск будет внутри временного отрезка";
             // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
             this.checkBox2.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.checkBox2.Location = new System.Drawing.Point(3, 3);
+            this.checkBox2.Location = new System.Drawing.Point(3, 43);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(106, 17);
+            this.checkBox2.Size = new System.Drawing.Size(84, 17);
             this.checkBox2.TabIndex = 0;
-            this.checkBox2.Text = "ДАТА ПУБЛИКАЦИИ";
+            this.checkBox2.Text = "Использовать";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
@@ -338,7 +397,7 @@
             this.flowLayoutPanel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanel9.Controls.Add(this.label6);
             this.flowLayoutPanel9.Controls.Add(this.dateTimePicker1);
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 26);
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 66);
             this.flowLayoutPanel9.Name = "flowLayoutPanel9";
             this.flowLayoutPanel9.Size = new System.Drawing.Size(129, 23);
             this.flowLayoutPanel9.TabIndex = 2;
@@ -371,7 +430,7 @@
             this.flowLayoutPanel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanel10.Controls.Add(this.label7);
             this.flowLayoutPanel10.Controls.Add(this.dateTimePicker2);
-            this.flowLayoutPanel10.Location = new System.Drawing.Point(3, 55);
+            this.flowLayoutPanel10.Location = new System.Drawing.Point(3, 95);
             this.flowLayoutPanel10.Name = "flowLayoutPanel10";
             this.flowLayoutPanel10.Size = new System.Drawing.Size(129, 23);
             this.flowLayoutPanel10.TabIndex = 3;
@@ -398,41 +457,54 @@
             this.dateTimePicker2.Size = new System.Drawing.Size(106, 21);
             this.dateTimePicker2.TabIndex = 1;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.label5.ForeColor = System.Drawing.Color.Gray;
-            this.label5.Location = new System.Drawing.Point(2, 81);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(148, 26);
-            this.label5.TabIndex = 25;
-            this.label5.Text = "При включеном параметре поиск будет внутри временного отрезка";
-            // 
             // flowLayoutPanel12
             // 
             this.flowLayoutPanel12.AutoSize = true;
+            this.flowLayoutPanel12.Controls.Add(this.label14);
+            this.flowLayoutPanel12.Controls.Add(this.label8);
             this.flowLayoutPanel12.Controls.Add(this.checkBox3);
             this.flowLayoutPanel12.Controls.Add(this.comboBox1);
-            this.flowLayoutPanel12.Controls.Add(this.label8);
             this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel12.Location = new System.Drawing.Point(4, 196);
-            this.flowLayoutPanel12.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel12.Location = new System.Drawing.Point(4, 270);
+            this.flowLayoutPanel12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 10);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(137, 89);
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(137, 103);
             this.flowLayoutPanel12.TabIndex = 9;
             this.flowLayoutPanel12.WrapContents = false;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold);
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.label14.Location = new System.Drawing.Point(2, 0);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(76, 14);
+            this.label14.TabIndex = 27;
+            this.label14.Text = "СОРТИРОВКА";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Calibri Light", 7F);
+            this.label8.ForeColor = System.Drawing.Color.Gray;
+            this.label8.Location = new System.Drawing.Point(2, 14);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(123, 39);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "При включеном параметре поисковая выдача будет отсортирована";
             // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
             this.checkBox3.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.checkBox3.Location = new System.Drawing.Point(3, 3);
+            this.checkBox3.Location = new System.Drawing.Point(3, 56);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(82, 17);
+            this.checkBox3.Size = new System.Drawing.Size(84, 17);
             this.checkBox3.TabIndex = 0;
-            this.checkBox3.Text = "СОРТИРОВКА";
+            this.checkBox3.Text = "Использовать";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
@@ -443,83 +515,88 @@
             this.comboBox1.Items.AddRange(new object[] {
             "По возрастанию",
             "По убыванию"});
-            this.comboBox1.Location = new System.Drawing.Point(3, 26);
+            this.comboBox1.Location = new System.Drawing.Point(3, 79);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(131, 21);
             this.comboBox1.TabIndex = 2;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.label8.ForeColor = System.Drawing.Color.Gray;
-            this.label8.Location = new System.Drawing.Point(2, 50);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(123, 39);
-            this.label8.TabIndex = 25;
-            this.label8.Text = "При включеном параметре поисковая выдача будет отсортирована";
-            // 
             // flowLayoutPanel11
             // 
             this.flowLayoutPanel11.AutoSize = true;
-            this.flowLayoutPanel11.Controls.Add(this.checkBox4);
+            this.flowLayoutPanel11.Controls.Add(this.label15);
             this.flowLayoutPanel11.Controls.Add(this.label9);
+            this.flowLayoutPanel11.Controls.Add(this.checkBox4);
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel11.Location = new System.Drawing.Point(4, 289);
-            this.flowLayoutPanel11.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel11.Location = new System.Drawing.Point(4, 385);
+            this.flowLayoutPanel11.Margin = new System.Windows.Forms.Padding(2, 2, 2, 10);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(144, 62);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(144, 76);
             this.flowLayoutPanel11.TabIndex = 8;
             this.flowLayoutPanel11.WrapContents = false;
             // 
-            // checkBox4
+            // label15
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("Calibri Light", 7F);
-            this.checkBox4.Location = new System.Drawing.Point(3, 3);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(105, 17);
-            this.checkBox4.TabIndex = 0;
-            this.checkBox4.Text = "СКРЫТЬ АРХИВНЫЕ";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold);
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.label15.Location = new System.Drawing.Point(2, 0);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(111, 14);
+            this.label15.TabIndex = 27;
+            this.label15.Text = "СКРЫТЬ АРХИВНЫЕ";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Calibri Light", 7F);
             this.label9.ForeColor = System.Drawing.Color.Gray;
-            this.label9.Location = new System.Drawing.Point(2, 23);
+            this.label9.Location = new System.Drawing.Point(2, 14);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(140, 39);
             this.label9.TabIndex = 25;
-            this.label9.Text = "При включеном параметре архивные справочники не будут показываться";
+            this.label9.Text = "При включеном параметре архивные справочники будут не показываться";
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Font = new System.Drawing.Font("Calibri Light", 7F);
+            this.checkBox4.Location = new System.Drawing.Point(3, 56);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(84, 17);
+            this.checkBox4.TabIndex = 0;
+            this.checkBox4.Text = "Использовать";
+            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel5
             // 
             this.flowLayoutPanel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(82)))), ((int)(((byte)(155)))));
             this.flowLayoutPanel5.Controls.Add(this.pictureBox1);
             this.flowLayoutPanel5.Controls.Add(this.pictureBox2);
+            this.flowLayoutPanel5.Controls.Add(this.label10);
             this.flowLayoutPanel5.Controls.Add(this.pictureBox3);
+            this.flowLayoutPanel5.Controls.Add(this.label11);
             this.flowLayoutPanel5.Controls.Add(this.pictureBox4);
+            this.flowLayoutPanel5.Controls.Add(this.label12);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(40, 489);
+            this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(1, 3, 1, 3);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(40, 510);
             this.flowLayoutPanel5.TabIndex = 1;
             this.flowLayoutPanel5.WrapContents = false;
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Image = global::NSI.Properties.Resources.qlogo;
-            this.pictureBox1.Location = new System.Drawing.Point(4, 6);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 6);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox1.Size = new System.Drawing.Size(34, 30);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -528,20 +605,32 @@
             // 
             this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox2.Image = global::NSI.Properties.Resources.home_b;
-            this.pictureBox2.Location = new System.Drawing.Point(9, 42);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.pictureBox2.Location = new System.Drawing.Point(10, 49);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(20, 20);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Location = new System.Drawing.Point(3, 72);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(34, 11);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "Главная";
+            // 
             // pictureBox3
             // 
             this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox3.Image = global::NSI.Properties.Resources.files_b;
-            this.pictureBox3.Location = new System.Drawing.Point(9, 75);
-            this.pictureBox3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.pictureBox3.Location = new System.Drawing.Point(10, 96);
+            this.pictureBox3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(20, 20);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -549,18 +638,42 @@
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(3, 119);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(32, 11);
+            this.label11.TabIndex = 5;
+            this.label11.Text = "Файлы";
+            // 
             // pictureBox4
             // 
             this.pictureBox4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox4.Image = global::NSI.Properties.Resources.serv_b;
-            this.pictureBox4.Location = new System.Drawing.Point(9, 108);
-            this.pictureBox4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.pictureBox4.Location = new System.Drawing.Point(10, 143);
+            this.pictureBox4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 0);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(20, 20);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 3;
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(3, 166);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(34, 11);
+            this.label12.TabIndex = 6;
+            this.label12.Text = "Конфиг";
             // 
             // searchLoader
             // 
@@ -572,13 +685,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(800, 489);
+            this.ClientSize = new System.Drawing.Size(800, 510);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.Name = "MainView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NSI | ...";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainView_FormClosed);
             this.Load += new System.EventHandler(this.MainView_Load);
@@ -605,6 +720,7 @@
             this.flowLayoutPanel11.ResumeLayout(false);
             this.flowLayoutPanel11.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -653,6 +769,14 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label statics;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
     }
 }
 

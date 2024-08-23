@@ -56,6 +56,7 @@ namespace NSI.Forms
 
         private void headerLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            flowLayoutPanel1.Visible = true;
             try
             {
                 flowLayoutPanel2.Controls.Clear();
@@ -86,13 +87,26 @@ namespace NSI.Forms
             columnDefinitions.Clear();
             foreach (string header in columns)
             {
+                string head = "";
+                switch (combi[header].Type)
+                {
+                    case ("UUID"): head = "UUID"; break;
+                    case ("Целое число (INTEGER)"): head = "integer";  break;
+                    case ("Целое число (BIGINT)"): head = "bigint"; break;
+                    case ("Дробное число"): head = "real";  break;
+                    case ("Текст"): head = "varchar"; break;
+                    case ("Да/нет"): head = "boolean";  break;
+                    case ("Дата"): head = "date";  break;
+                    default: break;
+
+                }
                 if (checkBox1.Checked && header == comboBox1.Text)
                 {
-                    columnDefinitions.Add($"\"{header}\" {combi[header].Type} PRIMARY KEY");
+                    columnDefinitions.Add($"\"{header}\" {head} PRIMARY KEY");
                 }
                 else
                 {
-                    columnDefinitions.Add($"\"{header}\" {combi[header].Type}");
+                    columnDefinitions.Add($"\"{header}\" {head}");
                 }
             }
             string tableName = label1.Text; 
@@ -100,6 +114,7 @@ namespace NSI.Forms
             string comment = $"COMMENT ON TABLE \"{config.Shema}\".\"{tableName}\" IS 'OID Справочника : {OID}; Версия справочника: {VERSION}; Дата внесения: {DateTime.Now:yyyy-MM-dd HH:mm:ss}.';";
             string finalScript = createTableScript + comment;
             label4.Text = finalScript;
+            button1.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -121,6 +136,14 @@ namespace NSI.Forms
         private void sqlcommandLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show("Команда была выполнена");
+            button1.Enabled = false;
+            button2.Enabled = false;
+        }
+
+        private void CreateTableView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            headerLoader.CancelAsync();
+            sqlcommandLoader.CancelAsync();
         }
     }
 }

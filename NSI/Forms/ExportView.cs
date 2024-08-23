@@ -27,10 +27,9 @@ namespace NSI
 {
     public partial class ExportView : Form
     {
-        public static string oid = "1.2.643.5.1.13.13.99.2.114";
-        public static string version = "3.5";
-        public static string total = "1317";
-        public static string key = "id";
+        public static string oid { get; set; }
+        public static string version { get; set; }
+        public static string total { get; set; }
 
         public static string destinationBasePath = @".\dump_sql\";
 
@@ -50,7 +49,7 @@ namespace NSI
         public ExportView()
         {
             InitializeComponent();
-            this.KeyPreview = true; 
+            this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(MainForm_KeyDown);
         }
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -64,11 +63,6 @@ namespace NSI
                 view.Show();
             }
         }
-        public void Correct()
-        {
-            flowLayoutPanel4.Invalidate();
-            flowLayoutPanel4.Refresh();
-        }
 
         private void ExportView_Load(object sender, EventArgs e)
         {
@@ -80,6 +74,7 @@ namespace NSI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            closeJop.Enabled = true;
             config = ConfigManager.GetDatabaseConfig();
             shema_l.Text = config.Shema;
             if (Tools.Fix(config.Shema) != "Данные отсутствуют.")
@@ -210,12 +205,12 @@ namespace NSI
             if (isPaused)
             {
                 pauseEvent.Set();
-                buttonPauseResume.Text = "ПАУЗА";
+                buttonPauseResume.Text = ";";
             }
             else
             {
                 pauseEvent.Reset();
-                buttonPauseResume.Text = "ПРОДОЛЖИТЬ";
+                buttonPauseResume.Text = "4";
             }
             isPaused = !isPaused;
         }
@@ -423,7 +418,7 @@ namespace NSI
                         ProcessCsvFile(csvFilePath, outputFolderPath, tableName);
                         UpdateProgress(io++, csvFiles.Length);
                     }
-                    catch (Exception  ex)
+                    catch (Exception ex)
                     {
                         failedFiles.Add(csvFilePath);
                         Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {csvFilePath} - {ex.Message}", 5);
@@ -434,7 +429,7 @@ namespace NSI
             }
             catch (Exception ex)
             {
-               Tools.MessageShow(notify, "Ошибка!", "Ошибка при загрузке папок: " + ex.Message, 5);
+                Tools.MessageShow(notify, "Ошибка!", "Ошибка при загрузке папок: " + ex.Message, 5);
                 MessageBox.Show("Произошла ошибка: " + ex.Message);
                 Sv.Log(ex.Message, ex.StackTrace);
             }
@@ -446,12 +441,12 @@ namespace NSI
                 pauseEvent.WaitOne();
                 try
                 {
-                   ProcessCsvFile(failedFile, outputFolderPath, tableName);
-                   Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
+                    ProcessCsvFile(failedFile, outputFolderPath, tableName);
+                    Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
                 }
                 catch (Exception ex)
                 {
-                   Tools.MessageShow(notify, "Ошибка", $"Ошибка при повторной обработке файла: {failedFile} - {ex.Message}", 5);
+                    Tools.MessageShow(notify, "Ошибка", $"Ошибка при повторной обработке файла: {failedFile} - {ex.Message}", 5);
                 }
             }
         }
@@ -472,7 +467,7 @@ namespace NSI
                 }
 
                 string[] columns = ProcessHeaderLine(headerLine);
-              
+
                 while (!sr.EndOfStream)
                 {
                     pauseEvent.WaitOne();
@@ -561,8 +556,8 @@ namespace NSI
             {
                 try
                 {
-                      infoDataLoader.RunWorkerAsync();
-                      demoLoader.RunWorkerAsync();
+                    infoDataLoader.RunWorkerAsync();
+                    demoLoader.RunWorkerAsync();
                 }
                 catch (Exception ex)
                 {
@@ -590,8 +585,9 @@ namespace NSI
             {
                 versionBox.SelectedIndex = 0;
             }
+            
         }
-
+        
         private void infoDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -693,7 +689,8 @@ namespace NSI
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            string exportPath = Path.Combine(".//data", oid_l.Text);
+            string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
+            string exportPath = Path.Combine(exportPathtemp, version_l.Text);
             Tools.OpenFolder(exportPath);
         }
 
@@ -740,7 +737,7 @@ namespace NSI
             {
                 try
                 {
-                    MessageBox.Show(Tools.ImportToPGSQL(sqlPath));
+                    statis.Text = Tools.ImportToPGSQL(sqlPath);
                 }
                 catch (Exception ex)
                 {
@@ -754,13 +751,44 @@ namespace NSI
             startButton.Enabled = true;
             numericUpDown1.Enabled = true;
             buttonPauseResume.Enabled = false;
-            loadsqlButton.Enabled = true;
             versionBox.Enabled = true;
+            statis.Text = "Загрузка завершена";
         }
 
         private void flowLayoutPanel4_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Tools.MessageShow(notify, "Фоновый режим", $"Окно \"{this.Text}\" переведено в фоновый режим", 5);
+            MainView view = new MainView();
+            view.Show();
+            this.Hide();
+        }
+
+        private void notify_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void closeJop_Click(object sender, EventArgs e)
+        {
+            closeJop.Enabled = false;
+            string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
+            string exportPath = Path.Combine(exportPathtemp, version_l.Text);
+            if (Directory.Exists(exportPath))
+            {
+                Directory.Delete(exportPath, true);
+            }
+            statis.Text = "Операция была отменена";
+            ExportView view = new ExportView();
+            ExportView.oid = oid;
+            ExportView.version = version;
+            view.Show();
+            this.Close();
         }
     }
 }

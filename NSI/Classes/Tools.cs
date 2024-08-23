@@ -66,7 +66,7 @@ namespace NSI.Classes
 
         public static void DeadApp()
         {
-            if (Application.OpenForms.Count > 1)
+            if (Application.OpenForms.Count == 1)
             {
                 Application.Exit();
             }
@@ -81,6 +81,10 @@ namespace NSI.Classes
         {
             try
             {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 Process.Start(new ProcessStartInfo()
                 {
                     FileName = path,

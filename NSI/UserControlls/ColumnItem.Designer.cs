@@ -38,55 +38,13 @@
             this.comboBox1.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "smallint",
-            "integer",
-            "bigint",
-            "decimal",
-            "numeric",
-            "real",
-            "double precision",
-            "smallserial",
-            "serial",
-            "bigserial",
-            "character varying(n)",
-            "varchar(n)",
-            "character(n)",
-            "char(n)",
-            "text",
-            "boolean",
-            "date",
-            "time [(p)] [without time zone]",
-            "time [(p)] with time zone",
-            "timestamp [(p)] [without time zone]",
-            "timestamp [(p)] with time zone",
-            "interval [fields] [(p)]",
-            "money",
-            "uuid",
-            "json",
-            "jsonb",
-            "[data_type][]",
-            "point",
-            "line",
-            "lseg",
-            "box",
-            "path",
-            "polygon",
-            "circle",
-            "cidr",
-            "inet",
-            "macaddr",
-            "macaddr8",
-            "bytea",
-            "int4range",
-            "int8range",
-            "numrange",
-            "tsrange",
-            "tstzrange",
-            "daterange",
-            "tsvector",
-            "tsquery",
-            "txid_snapshot",
-            "pg_lsn"});
+            "UUID",
+            "Целое число (INTEGER)",
+            "Целое число (BIGINT)",
+            "Дробное число",
+            "Текст",
+            "Да/нет",
+            "Дата"});
             this.comboBox1.Location = new System.Drawing.Point(3, 20);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(185, 24);
@@ -102,13 +60,13 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "label1";
             // 
-            // ColunmItem
+            // ColumnItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
-            this.Name = "ColunmItem";
+            this.Name = "ColumnItem";
             this.Size = new System.Drawing.Size(190, 49);
             this.Load += new System.EventHandler(this.ColunmItem_Load);
             this.ResumeLayout(false);

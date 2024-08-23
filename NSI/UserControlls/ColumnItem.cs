@@ -22,7 +22,7 @@ namespace NSI.UserControlls
         private void ColunmItem_Load(object sender, EventArgs e)
         {
             label1.Text = namehead;
-            comboBox1.SelectedIndex = 14;
+            comboBox1.SelectedIndex = 4;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

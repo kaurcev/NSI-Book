@@ -63,14 +63,24 @@ namespace NSI.Forms
 
         public void SaveConfig()
         {
-            string host = textBoxHost.Text;
-            string username = textBoxUsername.Text;
-            string password = textBoxPassword.Text;
-            string database = textBoxDatabase.Text;
-            string port = port_l.Text;
-            string shema = shema_l.Text;
-            ConfigManager.SetDatabaseConfig(host, username, password, database, port, shema);
-            MessageBox.Show("Параметры подключения сохранены. Можете закрыть окно");
+            try
+            {
+                string host = textBoxHost.Text;
+                string username = textBoxUsername.Text;
+                string password = textBoxPassword.Text;
+                string database = textBoxDatabase.Text;
+                string port = port_l.Text;
+                string shema = shema_l.Text;
+                ConfigManager.SetDatabaseConfig(host, username, password, database, port, shema);
+                MessageBox.Show("Параметры подключения сохранены.");
+                this.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении: {ex.Message}");
+            }
+
+           
         }
 
         private void LoadCurrentConfig()

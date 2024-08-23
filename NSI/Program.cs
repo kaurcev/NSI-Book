@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using NSI.Forms;
 
 namespace NSI
 {
@@ -15,7 +16,7 @@ namespace NSI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainView());
+            Application.Run(new WelcomeView());
         }
     }
 }

@@ -11,6 +11,22 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,15 +47,27 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>655D3186E39B6DB402AD17E4BAFF1B71B7A5EFDD</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>NSI_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Npgsql.2.2.7\lib\net35\Mono.Security.dll</HintPath>
+      <HintPath>..\packages\Npgsql.2.0.11\lib\Net35\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=2.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Npgsql.2.2.7\lib\net35\Npgsql.dll</HintPath>
+    <Reference Include="Npgsql, Version=2.0.11.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.0.11\lib\Net35\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -83,6 +111,12 @@
     <Compile Include="Forms\ExportView.Designer.cs">
       <DependentUpon>ExportView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WelcomeView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WelcomeView.Designer.cs">
+      <DependentUpon>WelcomeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControlls\ColumnItem.cs">
@@ -90,6 +124,30 @@
     </Compile>
     <Compile Include="UserControlls\ColumnItem.Designer.cs">
       <DependentUpon>ColumnItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlls\ErrorJopBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\ErrorJopBanner.Designer.cs">
+      <DependentUpon>ErrorJopBanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlls\SearchBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\SearchBanner.Designer.cs">
+      <DependentUpon>SearchBanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlls\WelcomeBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\WelcomeBanner.Designer.cs">
+      <DependentUpon>WelcomeBanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlls\NotFoundBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlls\NotFoundBanner.Designer.cs">
+      <DependentUpon>NotFoundBanner.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControlls\SearchItem.cs">
       <SubType>UserControl</SubType>
@@ -109,6 +167,9 @@
     <EmbeddedResource Include="Forms\ExportView.resx">
       <DependentUpon>ExportView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WelcomeView.resx">
+      <DependentUpon>WelcomeView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -122,9 +183,22 @@
     <EmbeddedResource Include="UserControlls\ColumnItem.resx">
       <DependentUpon>ColumnItem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControlls\ErrorJopBanner.resx">
+      <DependentUpon>ErrorJopBanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlls\SearchBanner.resx">
+      <DependentUpon>SearchBanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlls\WelcomeBanner.resx">
+      <DependentUpon>WelcomeBanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlls\NotFoundBanner.resx">
+      <DependentUpon>NotFoundBanner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControlls\SearchItem.resx">
       <DependentUpon>SearchItem.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="NSI_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -151,6 +225,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\archive_b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

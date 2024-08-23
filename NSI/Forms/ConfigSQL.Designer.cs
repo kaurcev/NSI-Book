@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigSQL));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -41,6 +42,9 @@
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.textBoxDatabase = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.shema_l = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.port_l = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,18 +54,15 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.shema_l = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -188,6 +189,34 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(292, 32);
             this.flowLayoutPanel4.TabIndex = 26;
             // 
+            // flowLayoutPanel8
+            // 
+            this.flowLayoutPanel8.AutoSize = true;
+            this.flowLayoutPanel8.Controls.Add(this.label7);
+            this.flowLayoutPanel8.Controls.Add(this.shema_l);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(139, 3);
+            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(150, 26);
+            this.flowLayoutPanel8.TabIndex = 27;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 6);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(42, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Схема:";
+            // 
+            // shema_l
+            // 
+            this.shema_l.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.shema_l.Location = new System.Drawing.Point(51, 3);
+            this.shema_l.Name = "shema_l";
+            this.shema_l.Size = new System.Drawing.Size(96, 20);
+            this.shema_l.TabIndex = 13;
+            // 
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -298,34 +327,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(307, 229);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
-            // flowLayoutPanel8
-            // 
-            this.flowLayoutPanel8.AutoSize = true;
-            this.flowLayoutPanel8.Controls.Add(this.label7);
-            this.flowLayoutPanel8.Controls.Add(this.shema_l);
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(139, 3);
-            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(150, 26);
-            this.flowLayoutPanel8.TabIndex = 27;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 6);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(42, 13);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Схема:";
-            // 
-            // shema_l
-            // 
-            this.shema_l.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.shema_l.Location = new System.Drawing.Point(51, 3);
-            this.shema_l.Name = "shema_l";
-            this.shema_l.Size = new System.Drawing.Size(96, 20);
-            this.shema_l.TabIndex = 13;
-            // 
             // ConfigSQL
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -333,8 +334,10 @@
             this.ClientSize = new System.Drawing.Size(307, 229);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ConfigSQL";
-            this.Text = "ConnectorView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Коннектор";
             this.Load += new System.EventHandler(this.ConfigSQL_Load);
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel6.ResumeLayout(false);
@@ -343,6 +346,8 @@
             this.flowLayoutPanel5.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.flowLayoutPanel8.ResumeLayout(false);
+            this.flowLayoutPanel8.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -351,8 +356,6 @@
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel8.ResumeLayout(false);
-            this.flowLayoutPanel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
