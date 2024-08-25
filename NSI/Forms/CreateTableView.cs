@@ -5,7 +5,6 @@ using NSI.UserControlls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -64,12 +63,11 @@ namespace NSI.Forms
                 JObject json = JObject.Parse(DemoJson);
                 JArray list = (JArray)json["list"];
                 columns = list[0].Select(item => (string)item["column"]).ToList();
-
                 columnDefinitions = new List<string>();
                 foreach (string header in columns)
                 {
                     ColumnItem item = new ColumnItem();
-                    ColumnItem.namehead  = header;
+                    ColumnItem.namehead = header;
                     ColumnItem.combi = combi;
                     flowLayoutPanel2.Controls.Add(item);
                     comboBox1.Items.Add(header);
@@ -91,12 +89,12 @@ namespace NSI.Forms
                 switch (combi[header].Type)
                 {
                     case ("UUID"): head = "UUID"; break;
-                    case ("Целое число (INTEGER)"): head = "integer";  break;
+                    case ("Целое число (INTEGER)"): head = "integer"; break;
                     case ("Целое число (BIGINT)"): head = "bigint"; break;
-                    case ("Дробное число"): head = "real";  break;
+                    case ("Дробное число"): head = "real"; break;
                     case ("Текст"): head = "varchar"; break;
-                    case ("Да/нет"): head = "boolean";  break;
-                    case ("Дата"): head = "date";  break;
+                    case ("Да/нет"): head = "boolean"; break;
+                    case ("Дата"): head = "date"; break;
                     default: break;
 
                 }
@@ -109,7 +107,7 @@ namespace NSI.Forms
                     columnDefinitions.Add($"\"{header}\" {head}");
                 }
             }
-            string tableName = label1.Text; 
+            string tableName = label1.Text;
             string createTableScript = $"CREATE TABLE \"{config.Shema}\".\"{tableName}\" (\n{string.Join(",\n", columnDefinitions.ToArray())}\n);\n";
             string comment = $"COMMENT ON TABLE \"{config.Shema}\".\"{tableName}\" IS 'OID Справочника : {OID}; Версия справочника: {VERSION}; Дата внесения: {DateTime.Now:yyyy-MM-dd HH:mm:ss}.';";
             string finalScript = createTableScript + comment;

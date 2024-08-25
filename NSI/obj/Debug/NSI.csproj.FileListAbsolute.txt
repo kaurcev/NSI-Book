@@ -74,3 +74,32 @@ C:\Users\Admin\Source\Repos\NSI-Book\NSI\obj\Debug\NSI.csproj.CoreCompileInputs.
 C:\Users\Admin\Source\Repos\NSI-Book\NSI\obj\Debug\NSI.csproj.Up2Date
 C:\Users\Admin\Source\Repos\NSI-Book\NSI\obj\Debug\NSI.exe
 C:\Users\Admin\Source\Repos\NSI-Book\NSI\obj\Debug\NSI.pdb
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\NSI.exe.manifest
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\NSI.application
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\NSI.exe
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\NSI.pdb
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\Mono.Security.dll
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\Npgsql.dll
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\bin\Debug\Npgsql.xml
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.Forms.ConfigSQL.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.Forms.CreateTableView.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.MainView.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.ExportView.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.Forms.WelcomeView.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.Properties.Resources.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.ColumnItem.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.ErrorJopBanner.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.SearchBanner.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.WelcomeBanner.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.NotFoundBanner.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.UserControlls.SearchItem.resources
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.exe.manifest
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.application
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.csproj.Up2Date
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.exe
+C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Debug\NSI.pdb

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -13,21 +11,24 @@ namespace NSI.Classes
         private static readonly string BaseDirectory = @".//";
         public static readonly string LogDirectory = BaseDirectory;
         public static readonly string ErrorLogFile = BaseDirectory + @"\\errors.log";
+
+        public static void createdlogfiles()
+        {
+            if (!File.Exists(ErrorLogFile))
+            {
+                using (StreamWriter sw = new StreamWriter(ErrorLogFile, true, Encoding.Default))
+                {
+                    string header = "Время исключения | ПК | ПОЛЬЗОВАТЕЛЬ | ДАННЫЕ | ДЕТАЛИ";
+                    sw.WriteLine(header);
+                }
+            }
+        }
         public static void Log(string message, string stackTrace)
         {
             try
             {
-                if (!File.Exists(ErrorLogFile))
-                {
-                    using (StreamWriter sw = new StreamWriter(ErrorLogFile, true, Encoding.Default))
-                    {
-                        string header = "Время исключения | ПК | ПОЛЬЗОВАТЕЛЬ | ДАННЫЕ | ДЕТАЛИ";
-                        sw.WriteLine(header);
-                    }
-                }
-
+                createdlogfiles();
                 string shortStackTrace = stackTrace.Length > 50 ? stackTrace.Substring(stackTrace.Length - 50) : stackTrace;
-
                 using (StreamWriter sw = new StreamWriter(ErrorLogFile, true, Encoding.Default))
                 {
                     string computerName = Environment.MachineName;

@@ -73,20 +73,20 @@ namespace NSI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap files_b {
+        internal static System.Drawing.Bitmap error_b {
             get {
-                object obj = ResourceManager.GetObject("files_b", resourceCulture);
+                object obj = ResourceManager.GetObject("error_b", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static byte[] font {
+        internal static System.Drawing.Bitmap files_b {
             get {
-                object obj = ResourceManager.GetObject("font", resourceCulture);
-                return ((byte[])(obj));
+                object obj = ResourceManager.GetObject("files_b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

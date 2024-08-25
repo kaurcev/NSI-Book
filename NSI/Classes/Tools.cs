@@ -1,10 +1,9 @@
 ﻿using Npgsql;
 using NSI.Classes.Postgresql;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,12 +33,13 @@ namespace NSI.Classes
             }
             catch (WebException ex)
             {
+
                 Sv.Log(ex.Message, ex.StackTrace);
                 return "";
             }
         }
 
-        public static string Fix(string htmlString)
+    public static string Fix(string htmlString)
         {
             try
             {
@@ -69,6 +69,30 @@ namespace NSI.Classes
             if (Application.OpenForms.Count == 1)
             {
                 Application.Exit();
+            }
+        }
+
+
+        public static string ToData(string input)
+        {
+            input = input.Trim('\'');
+            string[] formats =
+            {
+            "dd-MM-yyyy", "dd.MM.yyyy", "dd/MM/yyyy",
+            "MM-dd-yyyy", "MM.dd.yyyy", "MM/dd/yyyy",
+            "yyyy-MM-dd", "yyyy.MM.dd", "yyyy/MM/dd",
+            "dd-MM-yy", "dd.MM.yy", "dd/MM/yy",
+            "MM-dd-yy", "MM.dd.yy", "MM/dd/yy",
+            "yy-MM-dd", "yy.MM.dd", "yy/MM/dd"
+        };
+
+            if (DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+            {
+                return $"\'{date.ToString("yyyy-MM-dd")}\'";
+            }
+            else
+            {
+                return $"\'{input}\'";
             }
         }
 

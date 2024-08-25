@@ -88,14 +88,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSI.exe" size="1972144">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSI.exe" size="1955248">
       <assemblyIdentity name="NSI" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>u5Sv+/1VPWCGib5r8J12erLY91c=</dsig:DigestValue>
+        <dsig:DigestValue>K3Kbx97BRQaG98EtD6tvGnqHzn8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

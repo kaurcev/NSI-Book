@@ -6,22 +6,12 @@ using NSI.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using static Mono.Security.X509.X520;
-using static NSI.ExportView;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace NSI
 {
@@ -90,7 +80,6 @@ namespace NSI
             {
                 MessageBox.Show("Укажите схему в настройках конфигурации!");
             }
-
         }
 
         private void dataLoader_DoWork(object sender, DoWorkEventArgs e)
@@ -474,11 +463,13 @@ namespace NSI
 
                     string line = sr.ReadLine();
                     string[] values = ProcessDataLine(line);
+
                     string insertStatement = GenerateInsertStatement(tableName, columns, values);
                     sw.WriteLine(insertStatement);
                 }
             }
         }
+
         private string[] ProcessHeaderLine(string headerLine)
         {
             return headerLine.Split('|').Select(column => string.IsNullOrEmpty(column) ? "NULL" : "\"" + column.Replace("\"", "") + "\"").ToArray();
@@ -486,6 +477,10 @@ namespace NSI
         public string GenerateInsertStatement(string tableName, string[] columns, string[] values)
         {
             string columnsPart = string.Join(", ", columns);
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = Tools.ToData(values[i]);
+            }
             string valuesPart = string.Join(", ", values);
             return $"INSERT INTO \"{config.Shema}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
         }
@@ -585,9 +580,9 @@ namespace NSI
             {
                 versionBox.SelectedIndex = 0;
             }
-            
+
         }
-        
+
         private void infoDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)

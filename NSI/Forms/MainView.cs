@@ -1,29 +1,13 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NSI.Classes;
 using NSI.Forms;
 using NSI.UserControlls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using static Mono.Security.X509.X520;
-using static NSI.ExportView;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 namespace NSI
 {
@@ -109,13 +93,12 @@ namespace NSI
             {
                 var queryText = checkBox1.Checked ? Tools.Fix(textBox2.Text) : Tools.Fix(textBox1.Text);
                 queryText = queryText != "Данные отсутствуют." ? queryText : null;
-
                 if (queryText != null)
                 {
                     flowLayoutPanel1.Controls.Clear();
                     UserControl view = new SearchBanner();
                     flowLayoutPanel1.Controls.Add(view);
-                    Tools.Title(this, $"Поиск по запросу: \"{queryText}\"");;
+                    Tools.Title(this, $"Поиск по запросу: \"{queryText}\""); ;
                     searchButton.Enabled = false;
                     searchLoader.RunWorkerAsync();
                     label2.Text = $"№{pagenum}";
@@ -202,10 +185,10 @@ namespace NSI
 
         private void searchLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            statics.Text = "Формируем список...";
-            flowLayoutPanel1.Controls.Clear();
             try
             {
+                statics.Text = "Формируем список...";
+                flowLayoutPanel1.Controls.Clear();
                 if (responsed.List.Count == 0)
                 {
                     flowLayoutPanel1.Controls.Clear();
@@ -225,7 +208,8 @@ namespace NSI
                     SearchItem.archive = item.archive;
                     flowLayoutPanel1.Controls.Add(searchItem);
                 }
-
+                statics.Text = $"Показаны {responsed.List.Count} справочников";
+                searchButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -234,8 +218,6 @@ namespace NSI
                 var noFoundView = new ErrorJopBanner();
                 flowLayoutPanel1.Controls.Add(noFoundView);
             }
-            statics.Text = $"Показаны {responsed.List.Count} справочников";
-            searchButton.Enabled = true;
         }
         public class Item
         {
@@ -252,6 +234,15 @@ namespace NSI
         {
             public string Result { get; set; }
             public List<Item> List { get; set; }
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            Sv.createdlogfiles();
+            System.Diagnostics.Process txt = new System.Diagnostics.Process();
+            txt.StartInfo.FileName = "notepad.exe";
+            txt.StartInfo.Arguments = Sv.ErrorLogFile;
+            txt.Start();
         }
     }
 }
