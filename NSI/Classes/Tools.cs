@@ -7,13 +7,10 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
-using static Mono.Security.X509.X520;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NSI.Classes
 {
@@ -58,7 +55,7 @@ namespace NSI.Classes
 
         public static void tgbot(string text)
         {
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; 
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateServerCertificate);
             using (WebClient client = new WebClient())
             {
@@ -90,7 +87,7 @@ namespace NSI.Classes
                 }
                 return $"Данные отсутствуют.";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Sv.Log(ex.Message, ex.StackTrace);
                 return $"Данные отсутствуют.";

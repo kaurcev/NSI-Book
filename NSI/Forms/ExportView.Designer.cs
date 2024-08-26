@@ -102,7 +102,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.notify = new System.Windows.Forms.NotifyIcon(this.components);
             this.checktableLoader = new System.ComponentModel.BackgroundWorker();
-            this.tableCheckLoader = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel12.SuspendLayout();
@@ -1026,10 +1025,6 @@
             this.checktableLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checktableLoader_DoWork);
             this.checktableLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.checktableLoader_RunWorkerCompleted);
             // 
-            // tableCheckLoader
-            // 
-            this.tableCheckLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.tableCheckLoader_DoWork);
-            // 
             // ExportView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1159,7 +1154,6 @@
         private System.ComponentModel.BackgroundWorker checktableLoader;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.Label label3;
-        private System.ComponentModel.BackgroundWorker tableCheckLoader;
     }
 }
 

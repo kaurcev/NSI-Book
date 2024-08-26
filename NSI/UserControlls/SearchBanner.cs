@@ -8,5 +8,7 @@ namespace NSI.UserControlls
         {
             InitializeComponent();
         }
+
+
     }
 }

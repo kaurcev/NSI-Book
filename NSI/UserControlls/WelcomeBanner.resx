@@ -117,4 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Перед началом работы, настоятельно рекомендуем Вам убедиться в настройке конфигурации
+
+
+В левой навигационной панели есть соответствующая кнопка для перехода к настройки конфигурации подключения к СУБД Postgresql
+</value>
+  </data>
 </root>

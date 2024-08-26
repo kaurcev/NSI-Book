@@ -20,35 +20,56 @@ namespace NSI
         public static string oid { get; set; }
         public static string version { get; set; }
         public static string total { get; set; }
-
-        public static string destinationBasePath = @".\dump_sql\";
-        public static bool Jops = false;
-        public static string datestart = "";
-        public static string datenowend = "";
-
-        public static bool cconvert = true;
-        public static bool goodJop = true;
-
-        public static Responce_v resp_version;
+        private static string destinationBasePath = @".\dump_sql\";
+        private static string datestart = "";
+        private static string datenowend = "";
+        private static string DemoJson;
+        private static bool Jops = false;
+        private static bool cconvert = true;
+        private static bool goodJop = true;
+        private static bool isPaused = false;
+        private static double stepint = 500;
+        private static double step = 0;
+        private static Responce_v resp_version;
+        private static Responce responsed;
+        private DatabaseConfig config = ConfigManager.GetDatabaseConfig();
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
-        public static Responce responsed;
-        private bool isPaused = false;
-
-        DatabaseConfig config = ConfigManager.GetDatabaseConfig();
-
-        public static double stepint = 500;
-        private double step = 0;
-        string DemoJson;
-
         private List<string> failedFiles = new List<string>();
-
         public ExportView()
         {
             InitializeComponent();
             this.KeyPreview = true;
-            this.KeyDown += new KeyEventHandler(MainForm_KeyDown);
+            this.KeyDown += new KeyEventHandler(ExportView_KeyDown);
         }
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        #region Форма
+        private void ExportView_Load(object sender, EventArgs e)
+        {
+            oid_l.Text = oid;
+            version_l.Text = version;
+            shema_l.Text = config.Shema;
+            versionLoader.RunWorkerAsync();
+        }
+        private void ExportView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!Jops) return;
+            var result = MessageBox.Show(
+                "У вас выполняется загрузка данных с НСИ. Прервать? \n(Вариант \"Нет\" оставит экспорт в фоне)",
+                "Минутку!",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Tools.DeadApp();
+            }
+            else
+            {
+                e.Cancel = true;
+                Hide();
+            }
+        }
+        private void ExportView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F5)
             {
@@ -59,15 +80,247 @@ namespace NSI
                 view.Show();
             }
         }
-
-        private void ExportView_Load(object sender, EventArgs e)
+        private void ExportView_Resize(object sender, EventArgs e)
         {
-            oid_l.Text = oid;
-            version_l.Text = version;
-            shema_l.Text = config.Shema;
-            versionLoader.RunWorkerAsync();
+            if (FormWindowState.Minimized == WindowState)
+            {
+                Hide();
+            }
+        }
+        #endregion Форма
+
+        #region Кнопки
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+        private void closeJop_Click(object sender, EventArgs e)
+        {
+            closeJop.Enabled = false;
+            string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
+            string exportPath = Path.Combine(exportPathtemp, version_l.Text);
+            if (Directory.Exists(exportPath))
+            {
+                Directory.Delete(exportPath, true);
+            }
+            StatusText("Операция была отменена");
+            ExportView view = new ExportView();
+            ExportView.oid = oid;
+            ExportView.version = version;
+            view.Show();
+            this.Close();
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (isPaused)
+            {
+                pauseEvent.Set();
+                buttonPauseResume.Text = ";";
+            }
+            else
+            {
+                pauseEvent.Reset();
+                buttonPauseResume.Text = "4";
+            }
+            isPaused = !isPaused;
+        }
+        #endregion Кнопки
+
+        #region Вспомогательное
+        private bool FileExists(string filePath, int index)
+        {
+            if (!File.Exists(filePath))
+            {
+                Tools.MessageShow(notify, "Ошибка", $"Том {index} отсутствует, экспорт невозможен", 5);
+                return false;
+            }
+            return true;
+        }
+        private void CreateDirectoryIfNotExists(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+        #endregion Вспомогательное
+
+        #region Загрузчик версий
+        private void versionLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetVersionUrl();
+                resp_version = JsonConvert.DeserializeObject<Responce_v>(Tools.Fetch(url));
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+        private string GetVersionUrl()
+        {
+            return $"http://{Tools.NSIServer}/port/rest/versions?userKey={Tools.userKey}&identifier={oid_l.Text}&page=1";
+        }
+        private void versionBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            version = versionBox.SelectedItem?.ToString();
+            version_l.Text = version;
+            if (!string.IsNullOrEmpty(version))
+            {
+                try
+                {
+                    infoDataLoader.RunWorkerAsync();
+                    demoLoader.RunWorkerAsync();
+                }
+                catch (Exception ex)
+                {
+                    Tools.MessageShow(notify, "Ошибка", "Ошибка при запуске загрузчиков: " + ex.Message, 5);
+                }
+            }
+        }
+        private void versionLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке версий: " + e.Error.Message, 5);
+                return;
+            }
+
+            versionBox.Items.Clear();
+
+            foreach (var item in resp_version.List)
+            {
+                versionBox.Items.Add(item.version);
+            }
+
+            if (versionBox.Items.Count > 0)
+            {
+                versionBox.SelectedIndex = 0;
+            }
+        }
+
+        public class Responce_v
+        {
+            public string Result { get; set; }
+            public object ResultText { get; set; }
+            public object ResultCode { get; set; }
+            public List<Versions> List { get; set; }
+        }
+        public class Versions
+        {
+            public string version { get; set; }
+            public object createDate { get; set; }
+            public object publishDate { get; set; }
+            public object releaseNotes { get; set; }
+            public bool archive { get; set; }
+        }
+
+
+        #endregion Загрузчик версий
+
+        #region Загрузчик информации
+        private void infoDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                StatusText("Готов к работе");
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке данных: " + e.Error.Message, 5);
+                return;
+            }
+
+            if (responsed != null)
+            {
+                Tools.Title(this, String.Format("{0} v{1}", responsed.fullName, version_l.Text));
+                label23.Text = $"{responsed.rowsCount}";
+                oid_l.Text = Tools.Fix(responsed.oid);
+                fullName.Text = Tools.Fix(responsed.fullName);
+                createDate.Text = Tools.Fix($"Создан: {responsed.createDate}");
+                lastUpdate.Text = Tools.Fix($"Обновлён: {responsed.lastUpdate}");
+                publishDate.Text = Tools.Fix($"Опубликован: {responsed.publishDate}");
+                description.Text = Tools.Fix(responsed.description);
+                structureNotes.Text = Tools.Fix(responsed.structureNotes);
+                releaseNotes.Text = Tools.Fix(responsed.releaseNotes);
+                archivePanel.Visible = responsed.archive;
+            }
+        }
+        private string GetDataUrl(string oid, string version)
+        {
+            return $"http://{Tools.NSIServer}/port/rest/passport?userKey={Tools.userKey}&identifier={oid}&version={version}";
+        }
+
+        private void infoDataLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetDataUrl(oid_l.Text, version_l.Text);
+                responsed = JsonConvert.DeserializeObject<Responce>(Tools.Fetch(url));
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+
+        public class Responce
+        {
+            public string Result { get; set; }
+            public object ResultText { get; set; }
+            public object ResultCode { get; set; }
+            public string fullName { get; set; }
+            public string oid { get; set; }
+            public string version { get; set; }
+            public string createDate { get; set; }
+            public string publishDate { get; set; }
+            public string lastUpdate { get; set; }
+            public string description { get; set; }
+            public string structureNotes { get; set; }
+            public string releaseNotes { get; set; }
+            public bool archive { get; set; }
+            public int rowsCount { get; set; }
+        }
+
+        #endregion Загрузчик информации
+
+        #region ДемоОбзор
+        private void demoLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string url = GetDemoDataUrl(oid_l.Text, version_l.Text);
+                DemoJson = Tools.Fetch(url);
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                e.Result = ex;
+            }
+        }
+        private string GetDemoDataUrl(string oid, string version)
+        {
+            return $"http://{Tools.NSIServer}/port/rest/data?userKey={Tools.userKey}&identifier={oid}&version={version}&page=1&size=10";
+        }
+
+        private void demoLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            if (e.Error != null)
+            {
+                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке демонстрационных данных: " + e.Error.Message, 5);
+                return;
+            }
+
+            if (DemoJson != null)
+            {
+                DataGridViewFiller.FillDataGridView(dataGridView1, DemoJson);
+            }
+        }
+        #endregion ДемоОбзор
+
+        #region Проверка перед загрузкой
         private void button1_Click(object sender, EventArgs e)
         {
             datestart = Tools.GetNawDate();
@@ -82,7 +335,6 @@ namespace NSI
                 PrepareForWork();
             }
         }
-
         private void HandleTableCreation()
         {
             DialogResult result = MessageBox.Show("Перед экспортом нужно создать таблицу. У Вас она не создана. Создаём?",
@@ -103,7 +355,6 @@ namespace NSI
                 MessageBox.Show("Перед запуском создайте таблицу, нажав на F5");
             }
         }
-
         private void PrepareForWork()
         {
             closeJop.Enabled = true;
@@ -111,8 +362,7 @@ namespace NSI
             shema_l.Text = config.Shema;
             if (Tools.Fix(config.Shema) != "Данные отсутствуют.")
             {
-                statis.Text = "Подготовка к работе...";
-                Tools.NotivState(notify, "Подготовка к работе...");
+                StatusText("Подготовка к работе...");
                 SetControlsState(false);
                 buttonPauseResume.Enabled = true;
                 dataLoader.RunWorkerAsync();
@@ -122,27 +372,27 @@ namespace NSI
                 MessageBox.Show("Укажите схему в настройках конфигурации!");
             }
         }
-
         private void SetControlsState(bool isEnabled)
         {
             versionBox.Enabled = isEnabled;
             startButton.Enabled = isEnabled;
             numericUpDown1.Enabled = isEnabled;
         }
+        #endregion Проверка перед загрузкой
 
+        #region Загрузчик
         private void dataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
                 Jops = true;
-                statis.Text = "Проверка наличия скачанных данных ранее";
+                StatusText("Проверка наличия скачанных данных ранее");
                 string exportPath = Path.Combine(".//data", oid_l.Text);
                 string versionFolderPath = Path.Combine(exportPath, version_l.Text);
                 Directory.CreateDirectory(versionFolderPath);
                 if (Tools.IsDirectoryEmpty(versionFolderPath))
                 {
-                    statis.Text = "Загрузка данных";
-
+                    StatusText("Загрузка данных");
                     string baseFolderPath = $@".//temp//{oid_l.Text}//";
                     if (Directory.Exists(baseFolderPath))
                     {
@@ -161,9 +411,7 @@ namespace NSI
                             failedPages.Add(i);
                         }
                     }
-
-                    Tools.NotivState(notify, "Проверка целостности");
-                    statis.Text = "Проверка целостности";
+                    StatusText("Проверка целостности");
 
                     foreach (int page in failedPages)
                     {
@@ -172,26 +420,23 @@ namespace NSI
                         {
                             Directory.CreateDirectory(baseFolderPath);
                         }
-                        statis.Text = $"Докачка и восстановление тома №{page}";
-                        Tools.NotivState(notify, $"Докачка и восстановление тома №{page}");
+                        StatusText($"Докачка и восстановление тома №{page}");
                         LoadDataFromUrl(page, null);
                     }
-                    Tools.NotivState(notify, "Восстановление завершено");
-                    statis.Text = "Восстановление завершено";
-
+                    StatusText("Восстановление завершено");
                 }
                 else
                 {
                     cconvert = false;
-                    statis.Text = "Имеются данные. Загрузка проигнорирована";
+                    StatusText("Имеются данные. Загрузка проигнорирована");
                     dataLoader.CancelAsync();
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Sv.Log(ex.Message, ex.StackTrace);
             }
         }
-
         private bool LoadDataFromUrl(int page, List<int> failedPages)
         {
             try
@@ -251,7 +496,6 @@ namespace NSI
                 return false;
             }
         }
-
         private void HandleError(string message)
         {
             this.Invoke((MethodInvoker)delegate
@@ -259,29 +503,12 @@ namespace NSI
                 Tools.MessageShow(notify, "Ошибка", message, 5);
             });
         }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (isPaused)
-            {
-                pauseEvent.Set();
-                buttonPauseResume.Text = ";";
-            }
-            else
-            {
-                pauseEvent.Reset();
-                buttonPauseResume.Text = "4";
-            }
-            isPaused = !isPaused;
-        }
-
         private void dataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Tools.NotivState(notify, "Загрузка данных завершена");
-            statis.Text = "Загрузка данных завершена";
+            StatusText("Загрузка данных завершена");
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-           
+
             if (cconvert)
             {
                 convertToCSV.RunWorkerAsync();
@@ -290,18 +517,19 @@ namespace NSI
             {
                 convertToSQL.RunWorkerAsync();
             }
-           
-        }
 
+        }
+        #endregion Загрузчик
+
+        #region Экспорт в CSV
         public string exporturl = "";
         private void convertToCSV_DoWork(object sender, DoWorkEventArgs e)
         {
-            Tools.NotivState(notify, "Запуск конвертации в CSV");
             dataLoader.CancelAsync();
-            statis.Text = "Конвертация данных в CSV";
+            StatusText("Конвертация данных в CSV");
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-           
+
             try
             {
                 string exportPath = Path.Combine(".//data", oid_l.Text);
@@ -323,24 +551,34 @@ namespace NSI
                         failedIndexes.Add(index);
                     }
                 }
-                statis.Text = "Проверка целостнности";
-               
+                StatusText("Проверка целостнности");
                 RetryFailedFiles(failedIndexes, versionFolderPath);
-                Tools.NotivState(notify, "Экспорт завершён");
-                statis.Text = $"Экспорт завершён";
+                StatusText($"Экспорт завершён");
                 Tools.MessageShow(notify, "Успешно", "Экспорт завершён", 5);
-               
             }
             catch (Exception ex)
             {
                 HandleExportError(ex);
             }
         }
-
+        private void HandleExportError(Exception ex)
+        {
+            Sv.Log(ex.Message, ex.StackTrace);
+            Tools.MessageShow(notify, "Ошибка", "Произошла ошибка: " + ex.Message, 5);
+        }
+        private void RetryFailedFiles(List<int> failedIndexes, string versionFolderPath)
+        {
+            foreach (int index in failedIndexes)
+            {
+                pauseEvent.WaitOne();
+                StatusText($"Повторная попытка экспорта тома №{index}");
+                ExportJsonToCsv(index, versionFolderPath);
+            }
+            StatusText("Восстаноление завершено");
+        }
         private bool ExportJsonToCsv(int index, string versionFolderPath)
         {
-            statis.Text = $"Конвертация в CSV: {index} из {step}";
-            Tools.NotivState(notify, $"Конвертация в CSV: {index} из {step}");
+            StatusText($"Конвертация в CSV: {index} из {step}");
             string jsonFilePathtemp = Path.Combine(".//temp", oid_l.Text);
             string jsonFilePath = Path.Combine(jsonFilePathtemp, $"data_{index}.json");
             string csvFilePath = Path.Combine(versionFolderPath, $"data_{index}.csv");
@@ -349,7 +587,6 @@ namespace NSI
             {
                 return false;
             }
-
             if (TryExportJsonToCsv(jsonFilePath, csvFilePath))
             {
                 File.Delete(jsonFilePath);
@@ -361,31 +598,6 @@ namespace NSI
                 return false;
             }
         }
-
-        private bool FileExists(string filePath, int index)
-        {
-            if (!File.Exists(filePath))
-            {
-                Tools.MessageShow(notify, "Ошибка", $"Том {index} отсутствует, экспорт невозможен", 5);
-                return false;
-            }
-            return true;
-        }
-
-        private void RetryFailedFiles(List<int> failedIndexes, string versionFolderPath)
-        {
-            foreach (int index in failedIndexes)
-            {
-                pauseEvent.WaitOne();
-                Tools.NotivState(notify, $"Повторная попытка экспорта тома №{index}");
-                statis.Text = $"Повторная попытка экспорта тома №{index}";
-               
-                ExportJsonToCsv(index, versionFolderPath);
-            }
-            statis.Text = "Восстаноление завершено";
-           
-        }
-
         private bool TryExportJsonToCsv(string jsonFilePath, string csvFilePath)
         {
             try
@@ -394,9 +606,7 @@ namespace NSI
                 var list = JObject.Parse(json)["list"].ToObject<List<List<ColumnValue>>>();
                 var headers = GetDistinctHeaders(list);
                 var csvContent = new StringBuilder();
-
                 csvContent.AppendLine(string.Join("|", headers));
-
                 foreach (var row in list)
                 {
                     pauseEvent.WaitOne();
@@ -406,7 +616,6 @@ namespace NSI
                             : "").ToArray();
                     csvContent.AppendLine(string.Join("|", values));
                 }
-
                 File.WriteAllText(csvFilePath, csvContent.ToString(), Encoding.Default);
                 return true;
             }
@@ -416,50 +625,34 @@ namespace NSI
                 return false;
             }
         }
-
         private string[] GetDistinctHeaders(List<List<ColumnValue>> list)
         {
             return list.SelectMany(row => row.Select(item => item.column)).Distinct().ToArray();
         }
-        private void HandleExportError(Exception ex)
+        private void convertToCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Sv.Log(ex.Message, ex.StackTrace);
-            Tools.MessageShow(notify, "Ошибка", "Произошла ошибка: " + ex.Message, 5);
+            StatusText("Конвертация данных в CSV завершена");
+            progressBar1.Value = 0;
+            progressBar2.Value = 0;
+            dataLoader.CancelAsync();
+            convertToSQL.RunWorkerAsync();
         }
-        private void CreateDirectoryIfNotExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-        }
-
         public class ColumnValue
         {
             public string column { get; set; }
             public string value { get; set; }
         }
+        #endregion Экспорт в CSV
 
-        private void convertToCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            statis.Text = "Конвертация данных в CSV завершена";
-            progressBar1.Value = 0;
-            progressBar2.Value = 0;
-           
-            dataLoader.CancelAsync();
-            convertToSQL.RunWorkerAsync();
-        }
-
+        #region Экспорт в SQL
         private void convertToSQL_DoWork(object sender, DoWorkEventArgs e)
         {
             convertToCSV.CancelAsync();
-            Tools.NotivState(notify, $"Конвертация в SQL");
-            statis.Text = "Конвертация данных в SQL";
-           
+            StatusText("Конвертация данных в SQL");
             try
             {
                 Tools.MessageShow(notify, "Загрузка", "Запущен экспорт в SQL", 5);
-                Tools.NotivState(notify, $"Запущен экспорт в SQL");
+                StatusText($"Запущен экспорт в SQL");
                 string sourcePath = $@".\data\{oid_l.Text}\{version_l.Text}";
                 string destinationPath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}\";
                 if (Directory.Exists(destinationPath))
@@ -477,10 +670,8 @@ namespace NSI
         {
             CreateDirectoryIfNotExists(folderPath);
             CreateDirectoryIfNotExists(outputFolderPath);
-
             string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
             List<string> failedFiles = new List<string>();
-
             try
             {
                 int io = 1;
@@ -499,7 +690,6 @@ namespace NSI
                         Tools.MessageShow(notify, "Ошибка", $"Ошибка при обработке файла: {csvFilePath} - {ex.Message}", 5);
                     }
                 }
-
                 RetryFailedFiles(failedFiles, outputFolderPath, tableName);
             }
             catch (Exception ex)
@@ -509,6 +699,12 @@ namespace NSI
                 Sv.Log(ex.Message, ex.StackTrace);
             }
         }
+        private void UpdateProgress(int current, int total)
+        {
+            StatusText($" Конвертация в SQL: {current} из {total}");
+            int percentComplete = (int)((current * 100) / total);
+            progressBar1.Value = percentComplete;
+        }
         private void RetryFailedFiles(List<string> failedFiles, string outputFolderPath, string tableName)
         {
             foreach (string failedFile in failedFiles)
@@ -517,7 +713,7 @@ namespace NSI
                 try
                 {
                     ProcessCsvFile(failedFile, outputFolderPath, tableName);
-                    Tools.NotivState(notify, $"Повторная подготовка скриптов для: {failedFile}");
+                    StatusText($"Повторная подготовка скриптов для: {failedFile}");
                 }
                 catch (Exception ex)
                 {
@@ -555,11 +751,15 @@ namespace NSI
                 }
             }
         }
-
         private string[] ProcessHeaderLine(string headerLine)
         {
             return headerLine.Split('|').Select(column => string.IsNullOrEmpty(column) ? "NULL" : "\"" + column.Replace("\"", "") + "\"").ToArray();
         }
+        private string[] ProcessDataLine(string line)
+        {
+            return line.Split('|').Select(value => string.IsNullOrEmpty(value) ? "NULL" : "'" + value.Replace("\"", "") + "'").ToArray();
+        }
+
         public string GenerateInsertStatement(string tableName, string[] columns, string[] values)
         {
             string columnsPart = string.Join(", ", columns);
@@ -571,241 +771,50 @@ namespace NSI
             return $"INSERT INTO \"{config.Shema}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
         }
 
-        private string[] ProcessDataLine(string line)
-        {
-            return line.Split('|').Select(value => string.IsNullOrEmpty(value) ? "NULL" : "'" + value.Replace("\"", "") + "'").ToArray();
-        }
-        private void UpdateProgress(int current, int total)
-        {
-            Tools.NotivState(notify, $"Конвертация в SQL: {current} из {total}");
-            statis.Text = $" Конвертация в SQL: {current} из {total}";
-            int percentComplete = (int)((current * 100) / total);
-            progressBar1.Value = percentComplete;
-        }
-
         private void convertToSQL_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             convertToSQL.CancelAsync();
-            statis.Text = "Конвертация данных в SQL завершена. Подготовка к загрузке";
-            Tools.NotivState(notify, $"Конвертация данных в SQL завершена. Подготовка к загрузке");
+            StatusText("Конвертация данных в SQL завершена. Подготовка к загрузке");
             Tools.MessageShow(notify, "Скрипты готовы к загрузке", $"Загрузка скриптов справочника {oid_l.Text} в БД", 5);
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-           
             checktableLoader.RunWorkerAsync();
         }
+        #endregion Экспорт в SQL
 
-
-        public class Responce_v
+        #region Проверка таблиц
+        private void checktableLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            public string Result { get; set; }
-            public object ResultText { get; set; }
-            public object ResultCode { get; set; }
-            public List<Versions> List { get; set; }
+            StatusText("Проверка таблицы на наличие записей");
+            check();
         }
-        public class Versions
-        {
-            public string version { get; set; }
-            public object createDate { get; set; }
-            public object publishDate { get; set; }
-            public object releaseNotes { get; set; }
-            public bool archive { get; set; }
-        }
-
-        private void versionLoader_DoWork(object sender, DoWorkEventArgs e)
+        public void check()
         {
             try
             {
-                string url = GetVersionUrl();
-                resp_version = JsonConvert.DeserializeObject<Responce_v>(Tools.Fetch(url));
+                string tablecheck = $"TRUNCATE TABLE {config.Shema}.\"{oid_l.Text}\" CONTINUE IDENTITY RESTRICT;";
+                Tools.sqlcommand(tablecheck);
+                StatusText("Таблица проверена");
             }
             catch (Exception ex)
             {
                 Sv.Log(ex.Message, ex.StackTrace);
-                e.Result = ex;
+                StatusText(ex.Message);
             }
         }
-        private string GetVersionUrl()
+        private void checktableLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            return $"http://{Tools.NSIServer}/port/rest/versions?userKey={Tools.userKey}&identifier={oid_l.Text}&page=1";
+            uploadLoader.RunWorkerAsync();
+            StatusText("Загрузка данных в SQL завершена.");
         }
 
-        private void versionBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            version = versionBox.SelectedItem?.ToString();
-            version_l.Text = version;
-            if (!string.IsNullOrEmpty(version))
-            {
-                try
-                {
-                    infoDataLoader.RunWorkerAsync();
-                    demoLoader.RunWorkerAsync();
-                }
-                catch (Exception ex)
-                {
-                    Tools.MessageShow(notify, "Ошибка", "Ошибка при запуске загрузчиков: " + ex.Message, 5);
-                }
-            }
-        }
+        #endregion Проверка таблиц
 
-        private void versionLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке версий: " + e.Error.Message, 5);
-                return;
-            }
-
-            versionBox.Items.Clear();
-
-            foreach (var item in resp_version.List)
-            {
-                versionBox.Items.Add(item.version);
-            }
-
-            if (versionBox.Items.Count > 0)
-            {
-                versionBox.SelectedIndex = 0;
-            }
-
-        }
-
-        private void infoDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Tools.NotivState(notify, "Готов к работе");
-                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке данных: " + e.Error.Message, 5);
-                return;
-            }
-
-            if (responsed != null)
-            {
-                Tools.Title(this, String.Format("{0} v{1}", responsed.fullName, version_l.Text));
-                label23.Text = $"{responsed.rowsCount}";
-                oid_l.Text = Tools.Fix(responsed.oid);
-                fullName.Text = Tools.Fix(responsed.fullName);
-                createDate.Text = Tools.Fix($"Создан: {responsed.createDate}");
-                lastUpdate.Text = Tools.Fix($"Обновлён: {responsed.lastUpdate}");
-                publishDate.Text = Tools.Fix($"Опубликован: {responsed.publishDate}");
-                description.Text = Tools.Fix(responsed.description);
-                structureNotes.Text = Tools.Fix(responsed.structureNotes);
-                releaseNotes.Text = Tools.Fix(responsed.releaseNotes);
-                archivePanel.Visible = responsed.archive;
-            }
-        }
-        private string GetDataUrl(string oid, string version)
-        {
-            return $"http://{Tools.NSIServer}/port/rest/passport?userKey={Tools.userKey}&identifier={oid}&version={version}";
-        }
-        public class Responce
-        {
-            public string Result { get; set; }
-            public object ResultText { get; set; }
-            public object ResultCode { get; set; }
-            public string fullName { get; set; }
-            public string oid { get; set; }
-            public string version { get; set; }
-            public string createDate { get; set; }
-            public string publishDate { get; set; }
-            public string lastUpdate { get; set; }
-            public string description { get; set; }
-            public string structureNotes { get; set; }
-            public string releaseNotes { get; set; }
-            public bool archive { get; set; }
-            public int rowsCount { get; set; }
-        }
-
-        private void infoDataLoader_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                string url = GetDataUrl(oid_l.Text, version_l.Text);
-                responsed = JsonConvert.DeserializeObject<Responce>(Tools.Fetch(url));
-            }
-            catch (Exception ex)
-            {
-                Sv.Log(ex.Message, ex.StackTrace);
-                e.Result = ex;
-            }
-        }
-
-        private void demoLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-            if (e.Error != null)
-            {
-                Tools.MessageShow(notify, "Ошибка", "Ошибка при загрузке демонстрационных данных: " + e.Error.Message, 5);
-                return;
-            }
-
-            if (DemoJson != null)
-            {
-                DataGridViewFiller.FillDataGridView(dataGridView1, DemoJson);
-            }
-        }
-        private string GetDemoDataUrl(string oid, string version)
-        {
-            return $"http://{Tools.NSIServer}/port/rest/data?userKey={Tools.userKey}&identifier={oid}&version={version}&page=1&size=10";
-        }
-
-        private void demoLoader_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                string url = GetDemoDataUrl(oid_l.Text, version_l.Text);
-                DemoJson = Tools.Fetch(url);
-            }
-            catch (Exception ex)
-            {
-                Sv.Log(ex.Message, ex.StackTrace);
-                e.Result = ex;
-            }
-        }
-
-        private void pictureBox4_Click(object sender, EventArgs e)
-        {
-            ConfigSQL view = new ConfigSQL();
-            view.ShowDialog();
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-            string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
-            string exportPath = Path.Combine(exportPathtemp, version_l.Text);
-            Tools.OpenFolder(exportPath);
-        }
-
-        private void notify_Click(object sender, EventArgs e)
-        {
-            this.Show();
-            WindowState = FormWindowState.Normal;
-        }
-
-        private void notify_BalloonTipClicked(object sender, EventArgs e)
-        {
-            this.Show();
-            WindowState = FormWindowState.Normal;
-        }
-
-        private void ExportView_Resize(object sender, EventArgs e)
-        {
-            if (FormWindowState.Minimized == WindowState)
-            {
-                Hide();
-            }
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
-        }
-
+        #region Загрузчик SQL
         private void loadsqlButton_Click_1(object sender, EventArgs e)
         {
             uploadLoader.RunWorkerAsync();
         }
-
         private void uploadLoader_DoWork(object sender, DoWorkEventArgs e)
         {
             string sourcePath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}";
@@ -814,7 +823,8 @@ namespace NSI
             {
                 try
                 {
-                    if (Tools.ImportToPGSQL(sqlPath)) {
+                    if (Tools.ImportToPGSQL(sqlPath))
+                    {
                         statis.Text = $"Файл {sqlPath} загружен";
                     }
                     else
@@ -826,10 +836,9 @@ namespace NSI
                 catch (Exception ex)
                 {
                     Sv.Log(ex.Message, ex.StackTrace);
-                    MessageBox.Show("Ошибка", $"Ошибка при обработке файла: {sqlPath} - {ex.Message}");
                 }
             }
-            statis.Text = $"Отправка уведомления в Telegram";
+            StatusText($"Отправка уведомления в Telegram");
             datenowend = Tools.GetNawDate();
             string status = "";
             if (goodJop)
@@ -858,9 +867,11 @@ namespace NSI
             numericUpDown1.Enabled = true;
             buttonPauseResume.Enabled = false;
             versionBox.Enabled = true;
-            statis.Text = "Загрузка завершена";
+            StatusText("Загрузка завершена");
         }
+        #endregion Загрузчик SQL
 
+        #region Боковые кнопки
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             Tools.MessageShow(notify, "Фоновый режим", $"Окно \"{this.Text}\" переведено в фоновый режим", 5);
@@ -868,57 +879,17 @@ namespace NSI
             view.Show();
             this.Hide();
         }
-
-        private void notify_MouseClick(object sender, MouseEventArgs e)
+        private void pictureBox3_Click(object sender, EventArgs e)
         {
-            this.Show();
-            WindowState = FormWindowState.Normal;
-        }
-
-        private void closeJop_Click(object sender, EventArgs e)
-        {
-            closeJop.Enabled = false;
             string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
             string exportPath = Path.Combine(exportPathtemp, version_l.Text);
-            if (Directory.Exists(exportPath))
-            {
-                Directory.Delete(exportPath, true);
-            }
-            statis.Text = "Операция была отменена";
-            ExportView view = new ExportView();
-            ExportView.oid = oid;
-            ExportView.version = version;
-            view.Show();
-            this.Close();
+            Tools.OpenFolder(exportPath);
         }
-
-        private void checktableLoader_DoWork(object sender, DoWorkEventArgs e)
+        private void pictureBox4_Click(object sender, EventArgs e)
         {
-            statis.Text = "Проверка таблицы на наличие записей";
-            check();
+            ConfigSQL view = new ConfigSQL();
+            view.ShowDialog();
         }
-
-        public void check()
-        {
-            try
-            {
-                string tablecheck = $"TRUNCATE TABLE {config.Shema}.\"{oid_l.Text}\" CONTINUE IDENTITY RESTRICT;";
-                Tools.sqlcommand(tablecheck);
-                statis.Text = "Таблица проверена";
-            }
-            catch (Exception ex)
-            {
-                Sv.Log(ex.Message, ex.StackTrace);
-                statis.Text = ex.Message;
-            }
-        }
-
-        private void checktableLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            uploadLoader.RunWorkerAsync();
-            statis.Text = "Загрузка данных в SQL завершена.";
-        }
-
         private void pictureBox6_Click(object sender, EventArgs e)
         {
             Sv.createdlogfiles();
@@ -927,30 +898,30 @@ namespace NSI
             txt.StartInfo.Arguments = Sv.ErrorLogFile;
             txt.Start();
         }
+        #endregion Боковые кнопки
 
-        private void ExportView_FormClosing(object sender, FormClosingEventArgs e)
+        #region Уведомления
+        private void notify_Click(object sender, EventArgs e)
         {
-            if (Jops)
-            {
-                DialogResult result = MessageBox.Show("У вас выполняется загрузка данных с НСИ. Прервать? \n(Вариант \"Нет\" оставит экспорт в фоне)",
-                      "Минутку!",
-                      MessageBoxButtons.YesNo,
-                      MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    Tools.DeadApp();
-                }
-                else
-                {
-                    e.Cancel = true;
-                    Hide();
-                }
-            }
+            this.Show();
+            WindowState = FormWindowState.Normal;
         }
-
-        private void tableCheckLoader_DoWork(object sender, DoWorkEventArgs e)
+        private void notify_BalloonTipClicked(object sender, EventArgs e)
         {
+            this.Show();
+            WindowState = FormWindowState.Normal;
+        }
+        private void notify_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            WindowState = FormWindowState.Normal;
+        }
+        #endregion Уведомления
 
+        public void StatusText(string status)
+        {
+            statis.Text = status;
+            Tools.NotivState(notify, status);
         }
     }
 }
