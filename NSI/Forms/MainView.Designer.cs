@@ -68,16 +68,16 @@
             this.label9 = new System.Windows.Forms.Label();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.searchLoader = new System.ComponentModel.BackgroundWorker();
-            this.label17 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.searchLoader = new System.ComponentModel.BackgroundWorker();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -179,7 +179,7 @@
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.MaximumSize = new System.Drawing.Size(588, 0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(587, 0);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(587, 33);
             this.flowLayoutPanel3.TabIndex = 3;
             this.flowLayoutPanel3.WrapContents = false;
             // 
@@ -513,6 +513,7 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
@@ -594,59 +595,6 @@
             this.flowLayoutPanel5.TabIndex = 1;
             this.flowLayoutPanel5.WrapContents = false;
             // 
-            // label10
-            // 
-            this.label10.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(3, 72);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(34, 11);
-            this.label10.TabIndex = 4;
-            this.label10.Text = "Главная";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label11
-            // 
-            this.label11.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(3, 119);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(32, 11);
-            this.label11.TabIndex = 5;
-            this.label11.Text = "Файлы";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label12
-            // 
-            this.label12.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(3, 166);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(34, 11);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "Конфиг";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // searchLoader
-            // 
-            this.searchLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.searchLoader_DoWork);
-            this.searchLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.searchLoader_RunWorkerCompleted);
-            // 
-            // label17
-            // 
-            this.label17.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label17.ForeColor = System.Drawing.Color.White;
-            this.label17.Location = new System.Drawing.Point(3, 213);
-            this.label17.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(34, 11);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Логи";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -671,6 +619,18 @@
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
             // 
+            // label10
+            // 
+            this.label10.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Location = new System.Drawing.Point(3, 72);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(34, 11);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "Главная";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // pictureBox3
             // 
             this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -683,6 +643,18 @@
             this.pictureBox3.TabIndex = 2;
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(3, 119);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(32, 11);
+            this.label11.TabIndex = 5;
+            this.label11.Text = "Файлы";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox4
             // 
@@ -697,6 +669,18 @@
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
+            // label12
+            // 
+            this.label12.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(3, 166);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(34, 11);
+            this.label12.TabIndex = 6;
+            this.label12.Text = "Конфиг";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // pictureBox5
             // 
             this.pictureBox5.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -709,6 +693,23 @@
             this.pictureBox5.TabIndex = 7;
             this.pictureBox5.TabStop = false;
             this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
+            // 
+            // label17
+            // 
+            this.label17.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label17.ForeColor = System.Drawing.Color.White;
+            this.label17.Location = new System.Drawing.Point(3, 213);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(34, 11);
+            this.label17.TabIndex = 8;
+            this.label17.Text = "Логи";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // searchLoader
+            // 
+            this.searchLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.searchLoader_DoWork);
+            this.searchLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.searchLoader_RunWorkerCompleted);
             // 
             // MainView
             // 

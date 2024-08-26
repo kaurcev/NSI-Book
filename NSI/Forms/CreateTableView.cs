@@ -83,6 +83,7 @@ namespace NSI.Forms
         private void button2_Click(object sender, EventArgs e)
         {
             columnDefinitions.Clear();
+            button1.Enabled = true;
             foreach (string header in columns)
             {
                 string head = "";
@@ -109,7 +110,7 @@ namespace NSI.Forms
             }
             string tableName = label1.Text;
             string createTableScript = $"CREATE TABLE \"{config.Shema}\".\"{tableName}\" (\n{string.Join(",\n", columnDefinitions.ToArray())}\n);\n";
-            string comment = $"COMMENT ON TABLE \"{config.Shema}\".\"{tableName}\" IS 'OID Справочника : {OID}; Версия справочника: {VERSION}; Дата внесения: {DateTime.Now:yyyy-MM-dd HH:mm:ss}.';";
+            string comment = $"COMMENT ON TABLE \"{config.Shema}\".\"{tableName}\" IS 'OID Справочника : {OID}; Дата создания: {DateTime.Now:yyyy-MM-dd HH:mm:ss}.';";
             string finalScript = createTableScript + comment;
             label4.Text = finalScript;
             button1.Enabled = true;
@@ -123,11 +124,15 @@ namespace NSI.Forms
         {
             try
             {
+                if (Tools.checktable(label1.Text))
+                {
+                    Tools.sqlcommand($"DROP TABLE {config.Shema}.\"{label1.Text}\";");
+                }
                 Tools.sqlcommand(label4.Text);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Sv.Log(ex.Message, ex.StackTrace);
             }
         }
 
@@ -135,13 +140,13 @@ namespace NSI.Forms
         {
             MessageBox.Show("Команда была выполнена");
             button1.Enabled = false;
-            button2.Enabled = false;
         }
 
         private void CreateTableView_FormClosed(object sender, FormClosedEventArgs e)
         {
             headerLoader.CancelAsync();
             sqlcommandLoader.CancelAsync();
+            Tools.DeadApp();
         }
     }
 }

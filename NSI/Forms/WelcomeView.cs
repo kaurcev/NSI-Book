@@ -14,6 +14,7 @@ namespace NSI.Forms
         private void WelcomeView_Load(object sender, EventArgs e)
         {
             label4.Text = Application.ProductVersion;
+            label2.Text = Application.CompanyName;
             Tools.MessageShow(notify, "Добро пожаловать!", $"Здравствуйте {Environment.UserName}!", 5);
             Tools.NotivState(notify, "Двойным нажатием можете сразу закрыть программу");
         }

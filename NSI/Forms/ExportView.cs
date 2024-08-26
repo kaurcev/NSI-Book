@@ -22,6 +22,12 @@ namespace NSI
         public static string total { get; set; }
 
         public static string destinationBasePath = @".\dump_sql\";
+        public static bool Jops = false;
+        public static string datestart = "";
+        public static string datenowend = "";
+
+        public static bool cconvert = true;
+        public static bool goodJop = true;
 
         public static Responce_v resp_version;
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
@@ -64,15 +70,50 @@ namespace NSI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            datestart = Tools.GetNawDate();
+            goodJop = true;
+            cconvert = true;
+            if (!Tools.checktable(oid_l.Text))
+            {
+                HandleTableCreation();
+            }
+            else
+            {
+                PrepareForWork();
+            }
+        }
+
+        private void HandleTableCreation()
+        {
+            DialogResult result = MessageBox.Show("Перед экспортом нужно создать таблицу. У Вас она не создана. Создаём?",
+                                  "Проверка",
+                                  MessageBoxButtons.YesNo,
+                                  MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                CreateTableView view = new CreateTableView();
+                CreateTableView.OID = oid_l.Text;
+                CreateTableView.NOTE = structureNotes.Text;
+                CreateTableView.VERSION = version_l.Text;
+                view.Show();
+            }
+            else
+            {
+                MessageBox.Show("Перед запуском создайте таблицу, нажав на F5");
+            }
+        }
+
+        private void PrepareForWork()
+        {
             closeJop.Enabled = true;
             config = ConfigManager.GetDatabaseConfig();
             shema_l.Text = config.Shema;
             if (Tools.Fix(config.Shema) != "Данные отсутствуют.")
             {
+                statis.Text = "Подготовка к работе...";
                 Tools.NotivState(notify, "Подготовка к работе...");
-                versionBox.Enabled = false;
-                startButton.Enabled = false;
-                numericUpDown1.Enabled = false;
+                SetControlsState(false);
                 buttonPauseResume.Enabled = true;
                 dataLoader.RunWorkerAsync();
             }
@@ -82,43 +123,73 @@ namespace NSI
             }
         }
 
+        private void SetControlsState(bool isEnabled)
+        {
+            versionBox.Enabled = isEnabled;
+            startButton.Enabled = isEnabled;
+            numericUpDown1.Enabled = isEnabled;
+        }
+
         private void dataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            statis.Text = "Загрузка данных";
-            string baseFolderPath = $@".//temp//{oid_l.Text}//";
-            if (Directory.Exists(baseFolderPath))
+            try
             {
-                Directory.Delete(baseFolderPath, true);
-            }
-            Directory.CreateDirectory(baseFolderPath);
-
-            step = (int)Math.Ceiling(Convert.ToDouble(label23.Text) / Convert.ToDouble(numericUpDown1.Value));
-            List<int> failedPages = new List<int>();
-
-            for (int i = 1; i <= step; i++)
-            {
-                pauseEvent.WaitOne();
-                if (!LoadDataFromUrl(i, failedPages))
+                Jops = true;
+                statis.Text = "Проверка наличия скачанных данных ранее";
+                string exportPath = Path.Combine(".//data", oid_l.Text);
+                string versionFolderPath = Path.Combine(exportPath, version_l.Text);
+                Directory.CreateDirectory(versionFolderPath);
+                if (Tools.IsDirectoryEmpty(versionFolderPath))
                 {
-                    failedPages.Add(i);
-                }
-            }
+                    statis.Text = "Загрузка данных";
 
-            Tools.NotivState(notify, "Проверка целостности");
-            statis.Text = "Проверка целостности";
-            foreach (int page in failedPages)
-            {
-                pauseEvent.WaitOne();
-                if (!Directory.Exists(baseFolderPath))
-                {
+                    string baseFolderPath = $@".//temp//{oid_l.Text}//";
+                    if (Directory.Exists(baseFolderPath))
+                    {
+                        Directory.Delete(baseFolderPath, true);
+                    }
                     Directory.CreateDirectory(baseFolderPath);
+
+                    step = (int)Math.Ceiling(Convert.ToDouble(label23.Text) / Convert.ToDouble(numericUpDown1.Value));
+                    List<int> failedPages = new List<int>();
+
+                    for (int i = 1; i <= step; i++)
+                    {
+                        pauseEvent.WaitOne();
+                        if (!LoadDataFromUrl(i, failedPages))
+                        {
+                            failedPages.Add(i);
+                        }
+                    }
+
+                    Tools.NotivState(notify, "Проверка целостности");
+                    statis.Text = "Проверка целостности";
+
+                    foreach (int page in failedPages)
+                    {
+                        pauseEvent.WaitOne();
+                        if (!Directory.Exists(baseFolderPath))
+                        {
+                            Directory.CreateDirectory(baseFolderPath);
+                        }
+                        statis.Text = $"Докачка и восстановление тома №{page}";
+                        Tools.NotivState(notify, $"Докачка и восстановление тома №{page}");
+                        LoadDataFromUrl(page, null);
+                    }
+                    Tools.NotivState(notify, "Восстановление завершено");
+                    statis.Text = "Восстановление завершено";
+
                 }
-                statis.Text = $"Докачка и восстановление тома №{page}";
-                Tools.NotivState(notify, $"Докачка и восстановление тома №{page}");
-                LoadDataFromUrl(page, null);
+                else
+                {
+                    cconvert = false;
+                    statis.Text = "Имеются данные. Загрузка проигнорирована";
+                    dataLoader.CancelAsync();
+                }
             }
-            Tools.NotivState(notify, "Восстановление завершено");
-            statis.Text = "Восстановление завершено";
+            catch (Exception ex) {
+                Sv.Log(ex.Message, ex.StackTrace);
+            }
         }
 
         private bool LoadDataFromUrl(int page, List<int> failedPages)
@@ -210,7 +281,16 @@ namespace NSI
             statis.Text = "Загрузка данных завершена";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            convertToCSV.RunWorkerAsync();
+           
+            if (cconvert)
+            {
+                convertToCSV.RunWorkerAsync();
+            }
+            else
+            {
+                convertToSQL.RunWorkerAsync();
+            }
+           
         }
 
         public string exporturl = "";
@@ -221,6 +301,7 @@ namespace NSI
             statis.Text = "Конвертация данных в CSV";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
+           
             try
             {
                 string exportPath = Path.Combine(".//data", oid_l.Text);
@@ -243,10 +324,12 @@ namespace NSI
                     }
                 }
                 statis.Text = "Проверка целостнности";
+               
                 RetryFailedFiles(failedIndexes, versionFolderPath);
                 Tools.NotivState(notify, "Экспорт завершён");
                 statis.Text = $"Экспорт завершён";
                 Tools.MessageShow(notify, "Успешно", "Экспорт завершён", 5);
+               
             }
             catch (Exception ex)
             {
@@ -296,9 +379,11 @@ namespace NSI
                 pauseEvent.WaitOne();
                 Tools.NotivState(notify, $"Повторная попытка экспорта тома №{index}");
                 statis.Text = $"Повторная попытка экспорта тома №{index}";
+               
                 ExportJsonToCsv(index, versionFolderPath);
             }
             statis.Text = "Восстаноление завершено";
+           
         }
 
         private bool TryExportJsonToCsv(string jsonFilePath, string csvFilePath)
@@ -360,6 +445,7 @@ namespace NSI
             statis.Text = "Конвертация данных в CSV завершена";
             progressBar1.Value = 0;
             progressBar2.Value = 0;
+           
             dataLoader.CancelAsync();
             convertToSQL.RunWorkerAsync();
         }
@@ -369,6 +455,7 @@ namespace NSI
             convertToCSV.CancelAsync();
             Tools.NotivState(notify, $"Конвертация в SQL");
             statis.Text = "Конвертация данных в SQL";
+           
             try
             {
                 Tools.MessageShow(notify, "Загрузка", "Запущен экспорт в SQL", 5);
@@ -379,7 +466,6 @@ namespace NSI
                 {
                     Directory.Delete(destinationPath, true);
                 }
-
                 ExportSql(sourcePath, destinationPath, oid_l.Text);
             }
             catch (Exception ex)
@@ -503,9 +589,10 @@ namespace NSI
             statis.Text = "Конвертация данных в SQL завершена. Подготовка к загрузке";
             Tools.NotivState(notify, $"Конвертация данных в SQL завершена. Подготовка к загрузке");
             Tools.MessageShow(notify, "Скрипты готовы к загрузке", $"Загрузка скриптов справочника {oid_l.Text} в БД", 5);
-            uploadLoader.RunWorkerAsync();
             progressBar1.Value = 0;
             progressBar2.Value = 0;
+           
+            checktableLoader.RunWorkerAsync();
         }
 
 
@@ -689,11 +776,6 @@ namespace NSI
             Tools.OpenFolder(exportPath);
         }
 
-        private void ExportView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Tools.DeadApp();
-        }
-
         private void notify_Click(object sender, EventArgs e)
         {
             this.Show();
@@ -732,27 +814,51 @@ namespace NSI
             {
                 try
                 {
-                    statis.Text = Tools.ImportToPGSQL(sqlPath);
+                    if (Tools.ImportToPGSQL(sqlPath)) {
+                        statis.Text = $"Файл {sqlPath} загружен";
+                    }
+                    else
+                    {
+                        statis.Text = $"Ошибка при загрузке {sqlPath}";
+                        goodJop = false;
+                    }
                 }
                 catch (Exception ex)
                 {
+                    Sv.Log(ex.Message, ex.StackTrace);
                     MessageBox.Show("Ошибка", $"Ошибка при обработке файла: {sqlPath} - {ex.Message}");
                 }
             }
+            statis.Text = $"Отправка уведомления в Telegram";
+            datenowend = Tools.GetNawDate();
+            string status = "";
+            if (goodJop)
+            {
+                status = "Успешно";
+            }
+            else
+            {
+                status = "Загрузка не удалась. Требуется повторная загрузка";
+            }
+            string message = $"Наименование:\n{fullName.Text}\nOID:\n{oid_l.Text}\nВерсия:\n{version_l.Text}\nЗапущен:\n{datestart}\nЗавершен:\n{datenowend}\n===================\nДоп. инфоромация:\n{status}";
+            Tools.tgbot(message);
         }
 
         private void uploadLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (goodJop)
+            {
+                string sourcePath1 = $@".\data\{oid_l.Text}";
+                string sourcePath2 = $@".\dump_sql\{oid_l.Text}";
+                Directory.Delete(sourcePath1, true);
+                Directory.Delete(sourcePath2, true);
+            }
+            Jops = false;
             startButton.Enabled = true;
             numericUpDown1.Enabled = true;
             buttonPauseResume.Enabled = false;
             versionBox.Enabled = true;
             statis.Text = "Загрузка завершена";
-        }
-
-        private void flowLayoutPanel4_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
@@ -784,6 +890,67 @@ namespace NSI
             ExportView.version = version;
             view.Show();
             this.Close();
+        }
+
+        private void checktableLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            statis.Text = "Проверка таблицы на наличие записей";
+            check();
+        }
+
+        public void check()
+        {
+            try
+            {
+                string tablecheck = $"TRUNCATE TABLE {config.Shema}.\"{oid_l.Text}\" CONTINUE IDENTITY RESTRICT;";
+                Tools.sqlcommand(tablecheck);
+                statis.Text = "Таблица проверена";
+            }
+            catch (Exception ex)
+            {
+                Sv.Log(ex.Message, ex.StackTrace);
+                statis.Text = ex.Message;
+            }
+        }
+
+        private void checktableLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            uploadLoader.RunWorkerAsync();
+            statis.Text = "Загрузка данных в SQL завершена.";
+        }
+
+        private void pictureBox6_Click(object sender, EventArgs e)
+        {
+            Sv.createdlogfiles();
+            System.Diagnostics.Process txt = new System.Diagnostics.Process();
+            txt.StartInfo.FileName = "notepad.exe";
+            txt.StartInfo.Arguments = Sv.ErrorLogFile;
+            txt.Start();
+        }
+
+        private void ExportView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Jops)
+            {
+                DialogResult result = MessageBox.Show("У вас выполняется загрузка данных с НСИ. Прервать? \n(Вариант \"Нет\" оставит экспорт в фоне)",
+                      "Минутку!",
+                      MessageBoxButtons.YesNo,
+                      MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    Tools.DeadApp();
+                }
+                else
+                {
+                    e.Cancel = true;
+                    Hide();
+                }
+            }
+        }
+
+        private void tableCheckLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+
         }
     }
 }

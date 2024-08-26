@@ -98,7 +98,11 @@
             this.label15 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.notify = new System.Windows.Forms.NotifyIcon(this.components);
+            this.checktableLoader = new System.ComponentModel.BackgroundWorker();
+            this.tableCheckLoader = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel12.SuspendLayout();
@@ -120,6 +124,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
             // startButton
@@ -828,7 +833,6 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(600, 510);
             this.flowLayoutPanel4.TabIndex = 0;
             this.flowLayoutPanel4.WrapContents = false;
-            this.flowLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel4_Paint);
             // 
             // flowLayoutPanel11
             // 
@@ -884,6 +888,8 @@
             this.flowLayoutPanel5.Controls.Add(this.label15);
             this.flowLayoutPanel5.Controls.Add(this.pictureBox4);
             this.flowLayoutPanel5.Controls.Add(this.label16);
+            this.flowLayoutPanel5.Controls.Add(this.pictureBox6);
+            this.flowLayoutPanel5.Controls.Add(this.label3);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 0);
@@ -981,6 +987,31 @@
             this.label16.TabIndex = 9;
             this.label16.Text = "Конфиг";
             // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.pictureBox6.Image = global::NSI.Properties.Resources.error_b;
+            this.pictureBox6.Location = new System.Drawing.Point(10, 190);
+            this.pictureBox6.Margin = new System.Windows.Forms.Padding(2, 3, 2, 0);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 10;
+            this.pictureBox6.TabStop = false;
+            this.pictureBox6.Click += new System.EventHandler(this.pictureBox6_Click);
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Calibri", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(3, 213);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 11);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Логи";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // notify
             // 
             this.notify.Icon = ((System.Drawing.Icon)(resources.GetObject("notify.Icon")));
@@ -989,6 +1020,15 @@
             this.notify.BalloonTipClicked += new System.EventHandler(this.notify_BalloonTipClicked);
             this.notify.Click += new System.EventHandler(this.notify_Click);
             this.notify.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notify_MouseClick);
+            // 
+            // checktableLoader
+            // 
+            this.checktableLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checktableLoader_DoWork);
+            this.checktableLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.checktableLoader_RunWorkerCompleted);
+            // 
+            // tableCheckLoader
+            // 
+            this.tableCheckLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.tableCheckLoader_DoWork);
             // 
             // ExportView
             // 
@@ -1005,7 +1045,7 @@
             this.Name = "ExportView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NSI | ...";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ExportView_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportView_FormClosing);
             this.Load += new System.EventHandler(this.ExportView_Load);
             this.Resize += new System.EventHandler(this.ExportView_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -1041,6 +1081,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1115,6 +1156,10 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label8;
+        private System.ComponentModel.BackgroundWorker checktableLoader;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Label label3;
+        private System.ComponentModel.BackgroundWorker tableCheckLoader;
     }
 }
 

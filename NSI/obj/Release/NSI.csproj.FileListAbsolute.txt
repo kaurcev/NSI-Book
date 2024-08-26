@@ -56,3 +56,11 @@ C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Release\NSI.applicat
 C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Release\NSI.csproj.Up2Date
 C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Release\NSI.exe
 C:\Users\Admin\source\repos\NSI-Book — копия\NSI\obj\Release\NSI.pdb
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\NSI.exe.manifest
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\NSI.application
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\NSI.exe
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\NSI.pdb
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\релиз\NSI.exe.manifest
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\релиз\NSI.application
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\релиз\NSI.exe
+S:\Отдел разработки и внедрения ПО\Каурцев А. Е\релиз\NSI.pdb
