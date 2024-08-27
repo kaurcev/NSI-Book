@@ -48,6 +48,7 @@
             this.infoDataLoader = new System.ComponentModel.BackgroundWorker();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ostalos = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.archivePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -307,20 +308,34 @@
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel1.MaximumSize = new System.Drawing.Size(576, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(576, 274);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(576, 287);
             this.flowLayoutPanel1.TabIndex = 18;
             // 
             // flowLayoutPanel12
             // 
             this.flowLayoutPanel12.AutoSize = true;
             this.flowLayoutPanel12.Controls.Add(this.statis);
+            this.flowLayoutPanel12.Controls.Add(this.ostalos);
+            this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel12.MaximumSize = new System.Drawing.Size(570, 0);
             this.flowLayoutPanel12.MinimumSize = new System.Drawing.Size(570, 0);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
             this.flowLayoutPanel12.Padding = new System.Windows.Forms.Padding(10);
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(570, 33);
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(570, 46);
             this.flowLayoutPanel12.TabIndex = 11;
+            // 
+            // ostalos
+            // 
+            this.ostalos.AutoSize = true;
+            this.ostalos.Font = new System.Drawing.Font("Calibri Light", 7F);
+            this.ostalos.ForeColor = System.Drawing.Color.Gray;
+            this.ostalos.Location = new System.Drawing.Point(12, 23);
+            this.ostalos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.ostalos.Name = "ostalos";
+            this.ostalos.Size = new System.Drawing.Size(221, 13);
+            this.ostalos.TabIndex = 31;
+            this.ostalos.Text = "Тут будет время приблизительное время ожидания";
             // 
             // flowLayoutPanel2
             // 
@@ -329,7 +344,7 @@
             this.flowLayoutPanel2.Controls.Add(this.createDate);
             this.flowLayoutPanel2.Controls.Add(this.lastUpdate);
             this.flowLayoutPanel2.Controls.Add(this.publishDate);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 42);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 55);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(226, 23);
@@ -414,7 +429,7 @@
             this.fullName.AutoSize = true;
             this.fullName.Font = new System.Drawing.Font("Calibri", 11.3F, System.Drawing.FontStyle.Bold);
             this.fullName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(82)))), ((int)(((byte)(155)))));
-            this.fullName.Location = new System.Drawing.Point(2, 68);
+            this.fullName.Location = new System.Drawing.Point(2, 81);
             this.fullName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.fullName.MaximumSize = new System.Drawing.Size(570, 0);
             this.fullName.Name = "fullName";
@@ -427,7 +442,7 @@
             this.flowLayoutPanel3.AutoSize = true;
             this.flowLayoutPanel3.Controls.Add(this.oid_l);
             this.flowLayoutPanel3.Controls.Add(this.version_l);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(2, 90);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(2, 103);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(70, 13);
@@ -439,7 +454,7 @@
             this.label9.AutoSize = true;
             this.label9.BackColor = System.Drawing.Color.Transparent;
             this.label9.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(2, 116);
+            this.label9.Location = new System.Drawing.Point(2, 129);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 10, 2, 5);
             this.label9.Name = "label9";
             this.label9.Padding = new System.Windows.Forms.Padding(2);
@@ -451,7 +466,7 @@
             // 
             this.description.AutoSize = true;
             this.description.BackColor = System.Drawing.Color.White;
-            this.description.Location = new System.Drawing.Point(2, 139);
+            this.description.Location = new System.Drawing.Point(2, 152);
             this.description.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.description.MaximumSize = new System.Drawing.Size(570, 0);
             this.description.MinimumSize = new System.Drawing.Size(570, 20);
@@ -466,7 +481,7 @@
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(2, 172);
+            this.label10.Location = new System.Drawing.Point(2, 185);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 10, 2, 5);
             this.label10.Name = "label10";
             this.label10.Padding = new System.Windows.Forms.Padding(2);
@@ -478,7 +493,7 @@
             // 
             this.releaseNotes.AutoSize = true;
             this.releaseNotes.BackColor = System.Drawing.Color.White;
-            this.releaseNotes.Location = new System.Drawing.Point(2, 195);
+            this.releaseNotes.Location = new System.Drawing.Point(2, 208);
             this.releaseNotes.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.releaseNotes.MaximumSize = new System.Drawing.Size(570, 0);
             this.releaseNotes.MinimumSize = new System.Drawing.Size(570, 20);
@@ -493,7 +508,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(2, 228);
+            this.label2.Location = new System.Drawing.Point(2, 241);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 10, 2, 5);
             this.label2.Name = "label2";
             this.label2.Padding = new System.Windows.Forms.Padding(2);
@@ -505,7 +520,7 @@
             // 
             this.structureNotes.AutoSize = true;
             this.structureNotes.BackColor = System.Drawing.Color.White;
-            this.structureNotes.Location = new System.Drawing.Point(2, 251);
+            this.structureNotes.Location = new System.Drawing.Point(2, 264);
             this.structureNotes.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.structureNotes.MaximumSize = new System.Drawing.Size(570, 0);
             this.structureNotes.MinimumSize = new System.Drawing.Size(570, 20);
@@ -840,7 +855,7 @@
             this.flowLayoutPanel11.Controls.Add(this.label1);
             this.flowLayoutPanel11.Controls.Add(this.dataGridView1);
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel11.Location = new System.Drawing.Point(5, 286);
+            this.flowLayoutPanel11.Location = new System.Drawing.Point(5, 299);
             this.flowLayoutPanel11.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanel11.MaximumSize = new System.Drawing.Size(576, 0);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
@@ -1038,6 +1053,7 @@
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.Name = "ExportView";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NSI | ...";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportView_FormClosing);
@@ -1154,6 +1170,7 @@
         private System.ComponentModel.BackgroundWorker checktableLoader;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label ostalos;
     }
 }
 

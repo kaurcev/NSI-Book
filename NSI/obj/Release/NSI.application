@@ -4,14 +4,14 @@
   <description asmv2:publisher="NSI" asmv2:product="NSI" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <deployment install="true" mapFileExtensions="true" />
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="NSI.exe.manifest" size="5752">
+    <dependentAssembly dependencyType="install" codebase="NSI.exe.manifest" size="6228">
       <assemblyIdentity name="NSI.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>clldNW51o64uJGTqpbJowdzOxGQ=</dsig:DigestValue>
+        <dsig:DigestValue>nKZy4J/IDk0HieV6XkrrCAs+EAU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

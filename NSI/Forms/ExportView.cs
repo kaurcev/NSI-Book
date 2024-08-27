@@ -20,7 +20,6 @@ namespace NSI
         public static string oid { get; set; }
         public static string version { get; set; }
         public static string total { get; set; }
-        private static string destinationBasePath = @".\dump_sql\";
         private static string datestart = "";
         private static string datenowend = "";
         private static string DemoJson;
@@ -28,19 +27,18 @@ namespace NSI
         private static bool cconvert = true;
         private static bool goodJop = true;
         private static bool isPaused = false;
-        private static double stepint = 500;
         private static double step = 0;
         private static Responce_v resp_version;
         private static Responce responsed;
         private DatabaseConfig config = ConfigManager.GetDatabaseConfig();
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
-        private List<string> failedFiles = new List<string>();
         public ExportView()
         {
             InitializeComponent();
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ExportView_KeyDown);
         }
+
         #region Форма
         private void ExportView_Load(object sender, EventArgs e)
         {
@@ -96,13 +94,11 @@ namespace NSI
         }
         private void closeJop_Click(object sender, EventArgs e)
         {
+            Jops = false;
+            goodJop = false;
             closeJop.Enabled = false;
             string exportPathtemp = Path.Combine(@".\data\", oid_l.Text);
             string exportPath = Path.Combine(exportPathtemp, version_l.Text);
-            if (Directory.Exists(exportPath))
-            {
-                Directory.Delete(exportPath, true);
-            }
             StatusText("Операция была отменена");
             ExportView view = new ExportView();
             ExportView.oid = oid;
@@ -321,9 +317,11 @@ namespace NSI
         #endregion ДемоОбзор
 
         #region Проверка перед загрузкой
+        public static DateTime startJop;
         private void button1_Click(object sender, EventArgs e)
         {
-            datestart = Tools.GetNawDate();
+            startJop = DateTime.Now;
+            datestart = Tools.GetNawDate().ToString("HH:mm:ss dd-MM-yyyy");
             goodJop = true;
             cconvert = true;
             if (!Tools.checktable(oid_l.Text))
@@ -360,7 +358,7 @@ namespace NSI
             closeJop.Enabled = true;
             config = ConfigManager.GetDatabaseConfig();
             shema_l.Text = config.Shema;
-            if (Tools.Fix(config.Shema) != "Данные отсутствуют.")
+            if (config.Shema != null)
             {
                 StatusText("Подготовка к работе...");
                 SetControlsState(false);
@@ -387,10 +385,12 @@ namespace NSI
             {
                 Jops = true;
                 StatusText("Проверка наличия скачанных данных ранее");
+                step = (int)Math.Ceiling(Convert.ToDouble(label23.Text) / Convert.ToDouble(numericUpDown1.Value));
                 string exportPath = Path.Combine(".//data", oid_l.Text);
                 string versionFolderPath = Path.Combine(exportPath, version_l.Text);
                 Directory.CreateDirectory(versionFolderPath);
-                if (Tools.IsDirectoryEmpty(versionFolderPath))
+                int fileCount = Directory.GetFiles(versionFolderPath).Length;
+                if (Tools.IsDirectoryEmpty(versionFolderPath) && step != fileCount)
                 {
                     StatusText("Загрузка данных");
                     string baseFolderPath = $@".//temp//{oid_l.Text}//";
@@ -400,7 +400,7 @@ namespace NSI
                     }
                     Directory.CreateDirectory(baseFolderPath);
 
-                    step = (int)Math.Ceiling(Convert.ToDouble(label23.Text) / Convert.ToDouble(numericUpDown1.Value));
+
                     List<int> failedPages = new List<int>();
 
                     for (int i = 1; i <= step; i++)
@@ -477,6 +477,7 @@ namespace NSI
                                     {
                                         progressBar2.Value = (int)((totalReadBytes * 100) / totalBytes);
                                     }
+                                    ostalos.Text = Tools.Ostalos(page, Convert.ToInt32(step), startJop);
                                 });
                             }
                         }
@@ -525,11 +526,10 @@ namespace NSI
         public string exporturl = "";
         private void convertToCSV_DoWork(object sender, DoWorkEventArgs e)
         {
-            dataLoader.CancelAsync();
+            startJop = DateTime.Now;
             StatusText("Конвертация данных в CSV");
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-
             try
             {
                 string exportPath = Path.Combine(".//data", oid_l.Text);
@@ -579,6 +579,7 @@ namespace NSI
         private bool ExportJsonToCsv(int index, string versionFolderPath)
         {
             StatusText($"Конвертация в CSV: {index} из {step}");
+            ostalos.Text = Tools.Ostalos(index, Convert.ToInt32(step), startJop);
             string jsonFilePathtemp = Path.Combine(".//temp", oid_l.Text);
             string jsonFilePath = Path.Combine(jsonFilePathtemp, $"data_{index}.json");
             string csvFilePath = Path.Combine(versionFolderPath, $"data_{index}.csv");
@@ -647,7 +648,7 @@ namespace NSI
         #region Экспорт в SQL
         private void convertToSQL_DoWork(object sender, DoWorkEventArgs e)
         {
-            convertToCSV.CancelAsync();
+            startJop = DateTime.Now;
             StatusText("Конвертация данных в SQL");
             try
             {
@@ -678,7 +679,6 @@ namespace NSI
                 foreach (string csvFilePath in csvFiles)
                 {
                     pauseEvent.WaitOne();
-
                     try
                     {
                         ProcessCsvFile(csvFilePath, outputFolderPath, tableName);
@@ -704,6 +704,7 @@ namespace NSI
             StatusText($" Конвертация в SQL: {current} из {total}");
             int percentComplete = (int)((current * 100) / total);
             progressBar1.Value = percentComplete;
+            ostalos.Text = Tools.Ostalos(current, total, startJop);
         }
         private void RetryFailedFiles(List<string> failedFiles, string outputFolderPath, string tableName)
         {
@@ -768,7 +769,7 @@ namespace NSI
                 values[i] = Tools.ToData(values[i]);
             }
             string valuesPart = string.Join(", ", values);
-            return $"INSERT INTO \"{config.Shema}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart}) ON CONFLICT ({columns[0]}) DO NOTHING;";
+            return $"INSERT INTO \"{config.Shema}\".\"{tableName}\" ({columnsPart}) VALUES ({valuesPart});";
         }
 
         private void convertToSQL_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -817,10 +818,13 @@ namespace NSI
         }
         private void uploadLoader_DoWork(object sender, DoWorkEventArgs e)
         {
+            startJop = DateTime.Now;
             string sourcePath = $@".\dump_sql\{oid_l.Text}\{version_l.Text}";
             string[] sqlFiles = Directory.GetFiles(sourcePath, "*.sql");
+            int File = 1;
             foreach (string sqlPath in sqlFiles)
             {
+                pauseEvent.WaitOne();
                 try
                 {
                     if (Tools.ImportToPGSQL(sqlPath))
@@ -837,37 +841,47 @@ namespace NSI
                 {
                     Sv.Log(ex.Message, ex.StackTrace);
                 }
+                ostalos.Text = Tools.Ostalos(File, Convert.ToInt32(sqlFiles.Length), startJop);
+                File++;
             }
-            StatusText($"Отправка уведомления в Telegram");
-            datenowend = Tools.GetNawDate();
-            string status = "";
-            if (goodJop)
-            {
-                status = "Успешно";
-            }
-            else
-            {
-                status = "Загрузка не удалась. Требуется повторная загрузка";
-            }
-            string message = $"Наименование:\n{fullName.Text}\nOID:\n{oid_l.Text}\nВерсия:\n{version_l.Text}\nЗапущен:\n{datestart}\nЗавершен:\n{datenowend}\n===================\nДоп. инфоромация:\n{status}";
-            Tools.tgbot(message);
         }
 
-        private void uploadLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public void EndWorker()
         {
-            if (goodJop)
+            if (Jops)
             {
-                string sourcePath1 = $@".\data\{oid_l.Text}";
-                string sourcePath2 = $@".\dump_sql\{oid_l.Text}";
-                Directory.Delete(sourcePath1, true);
-                Directory.Delete(sourcePath2, true);
+                StatusText($"Отправка уведомления в Telegram");
+                datenowend = Tools.GetNawDate().ToString("HH:mm:ss dd-MM-yyyy");
+                string status = goodJop ? "Успешно." : $"Загрузка не удалась. Информацию можете узнать в логах.";
+                string message = $"Наименование:\n{fullName.Text}\nOID:\n{oid_l.Text}\nВерсия:\n{version_l.Text}\nЗапущен:\n{datestart}\nЗавершен:\n{datenowend}\n===================\nДоп. информация:\n{status}";
+                Tools.tgbot(message);
             }
             Jops = false;
             startButton.Enabled = true;
             numericUpDown1.Enabled = true;
             buttonPauseResume.Enabled = false;
+            closeJop.Enabled = false;
             versionBox.Enabled = true;
             StatusText("Загрузка завершена");
+            if (goodJop)
+            {
+                string sourcePath1 = $@".\data\{oid_l.Text}";
+                string sourcePath2 = $@".\dump_sql\{oid_l.Text}";
+                try
+                {
+                    Directory.Delete(sourcePath1, true);
+                    Directory.Delete(sourcePath2, true);
+                }
+                catch (Exception ex)
+                {
+                    Sv.Log(ex.Message, ex.StackTrace);
+                }
+            }
+        }
+
+        private void uploadLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            EndWorker();
         }
         #endregion Загрузчик SQL
 

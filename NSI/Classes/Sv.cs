@@ -7,10 +7,9 @@ namespace NSI.Classes
 {
     internal class Sv
     {
-        //   private static readonly string BaseDirectory = @"S:\\Отдел разработки и внедрения ПО\\Каурцев А. Е\\serv\\www\\NSI\\logs";
         private static readonly string BaseDirectory = @".//";
         public static readonly string LogDirectory = BaseDirectory;
-        public static readonly string ErrorLogFile = BaseDirectory + @"\\errors.log";
+        public static readonly string ErrorLogFile = BaseDirectory + @".//errors.log";
 
         public static void createdlogfiles()
         {
@@ -18,7 +17,7 @@ namespace NSI.Classes
             {
                 using (StreamWriter sw = new StreamWriter(ErrorLogFile, true, Encoding.Default))
                 {
-                    string header = "Время исключения | ПК | ПОЛЬЗОВАТЕЛЬ | ДАННЫЕ | ДЕТАЛИ";
+                    string header = "Время исключения | ВЕРСИЯ | ПК | ПОЛЬЗОВАТЕЛЬ | ДАННЫЕ | ДЕТАЛИ";
                     sw.WriteLine(header);
                 }
             }
@@ -33,7 +32,7 @@ namespace NSI.Classes
                 {
                     string computerName = Environment.MachineName;
                     string userName = Environment.UserName;
-                    string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {computerName} | {userName} | {message.Replace(Environment.NewLine, " ")} | {shortStackTrace.Replace(Environment.NewLine, " ")}";
+                    string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {Application.ProductVersion} | {computerName} | {userName} | {message.Replace(Environment.NewLine, " ")} | {shortStackTrace.Replace(Environment.NewLine, " ")}";
                     sw.WriteLine(logMessage);
                 }
             }
