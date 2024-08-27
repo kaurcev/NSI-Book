@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BB251D42-06B5-48E6-8DB9-FC88CF87D6BE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -10,7 +11,7 @@
     <AssemblyName>NSI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -58,6 +59,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -242,9 +246,6 @@
     <None Include="Resources\start_search.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\errorloading.png" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +253,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\notfound.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

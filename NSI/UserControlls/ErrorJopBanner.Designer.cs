@@ -47,10 +47,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Calibri", 14F, System.Drawing.FontStyle.Bold);
+            this.label3.Font = new System.Drawing.Font("Calibri", 11.3F, System.Drawing.FontStyle.Bold);
             this.label3.Location = new System.Drawing.Point(6, 3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(282, 23);
+            this.label3.Size = new System.Drawing.Size(245, 19);
             this.label3.TabIndex = 7;
             this.label3.Text = "При загрузке произошла ошибка";
             // 
